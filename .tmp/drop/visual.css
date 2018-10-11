@@ -1,8 +1,24 @@
-.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG p {
-  font-size: 20px;
-  font-weight: bold;
+.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
 }
-.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG p em {
-  background: yellow;
-  padding: 5px;
+.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .left_container {
+  display: flex;
+  align-items: baseline;
+}
+.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .right_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .current_value {
+  font-size: 38px;
+}
+.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .percent_value {
+  margin-left: 12px;
+  font-size: 18px;
+}
+.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .reste_value {
+  font-size: 24px;
 }

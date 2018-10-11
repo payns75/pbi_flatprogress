@@ -1,13 +1,13 @@
 {
     "dataRoles": [
         {
-            "displayName": "Category Data",
-            "name": "category",
-            "kind": "Grouping"
-        },
-        {
             "displayName": "Measure Data",
             "name": "measure",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Objectif Data",
+            "name": "objectif_measure",
             "kind": "Measure"
         }
     ],
@@ -47,7 +47,7 @@
                         "fill": {}
                     }
                 },
-                 "fontSize": {
+                "fontSize": {
                     "displayName": "Text Size",
                     "type": {
                         "formatting": {
@@ -60,20 +60,28 @@
     },
     "dataViewMappings": [
         {
-            "categorical": {
-                "categories": {
-                    "for": {
-                        "in": "category"
+            "conditions": [
+                {
+                    "measure": {
+                        "min": 1,
+                        "max": 1
                     },
-                    "dataReductionAlgorithm": {
-                        "top": {}
+                    "objectif_measure": {
+                        "max": 1
                     }
-                },
+                }
+            ],
+            "categorical": {
                 "values": {
                     "select": [
                         {
                             "bind": {
                                 "to": "measure"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "objectif_measure"
                             }
                         }
                     ]
