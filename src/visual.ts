@@ -1,43 +1,75 @@
 module powerbi.extensibility.visual {
     "use strict";
     export class Visual implements IVisual {
-        private target: HTMLElement;
-        private updateCount: number;
+        private svg: d3.Selection<SVGElement>;
         private settings: VisualSettings;
-        private textNode: Text;
+        private gcontainer: d3.Selection<SVGElement>;
+        private back_rectangle: any;
+        private front_rectangle: any;
 
         constructor(options: VisualConstructorOptions) {
-            console.log('Visual constructor', options);
-            this.target = options.element;
-            this.updateCount = 0;
-            if (typeof document !== "undefined") {
-                const new_p: HTMLElement = document.createElement("p");
-                new_p.appendChild(document.createTextNode("Update count:"));
-                const new_em: HTMLElement = document.createElement("em");
-                this.textNode = document.createTextNode(this.updateCount.toString());
-                new_em.appendChild(this.textNode);
-                new_p.appendChild(new_em);
-                this.target.appendChild(new_p);
-            }
+            this.svg = d3.select(options.element).append('svg');
+            this.gcontainer = this.svg.append('g').classed('percenter', true);
+
+            this.back_rectangle = this.gcontainer
+                .append('g')
+                .selectAll('rect')
+                .data([options.element.offsetWidth])
+                .enter()
+                .append("rect")
+                .attr("height", 50);
+
+            this.front_rectangle = this.gcontainer
+                .append('g')
+                .selectAll('rect')
+                .data([0])
+                .enter()
+                .append("rect")
+                .attr("height", 50);
         }
 
         public update(options: VisualUpdateOptions) {
             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-            console.log('Visual update', options);
-            if (typeof this.textNode !== "undefined") {
-                this.textNode.textContent = (this.updateCount++).toString();
-            }
+            const value = Visual.getvalue(options.dataViews[0].categorical, "measure");
+
+            this.svg.attr({
+                height: options.viewport.height,
+                width: options.viewport.width
+            });
+
+            this.back_rectangle.data([options.viewport.width])
+                .attr("fill", "gray")
+                .attr("width", d => d);
+
+            this.front_rectangle.data([options.viewport.width * value])
+                .attr("fill", "blue")
+                .transition()
+                .duration(1000)
+                .attr("width", d => d);
+
+            /* const back_rectangle = this.gcontainer.append("rect")
+                .attr("width", options.viewport.width)
+                .attr("height", 50)
+                .attr("fill", "gray"); */
+
+            /* const front_rectangle = this.gcontainer.append("rect")
+                .attr("width", options.viewport.width / 2)
+                .attr("height", 50)
+                .attr("fill", "blue"); */
         }
 
         private static parseSettings(dataView: DataView): VisualSettings {
             return VisualSettings.parse(dataView) as VisualSettings;
         }
 
-        /** 
-         * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
-         * objects and properties you want to expose to the users in the property pane.
-         * 
-         */
+        public static getvalue(categorical: DataViewCategorical, name: string): any {
+            const item = categorical.values.filter(f => f.source.roles[name]).map(m => m.values[0]);
+
+            if (item && item.length === 1) {
+                return item[0];
+            }
+        }
+
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
             return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
         }
