@@ -9,6 +9,11 @@
             "displayName": "Objectif Data",
             "name": "objectif_measure",
             "kind": "Measure"
+        },
+        {
+            "displayName": "Point de Passage",
+            "name": "pt_passage_measure",
+            "kind": "Measure"
         }
     ],
     "dataViewMappings": [
@@ -21,6 +26,9 @@
                     },
                     "objectif_measure": {
                         "min": 1,
+                        "max": 1
+                    },
+                    "pt_passage_measure": {
                         "max": 1
                     }
                 }
@@ -36,6 +44,11 @@
                         {
                             "bind": {
                                 "to": "objectif_measure"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "pt_passage_measure"
                             }
                         }
                     ]
@@ -69,6 +82,23 @@
                 },
                 "animation": {
                     "displayName": "Animation",
+                    "type": {
+                        "bool": true
+                    }
+                }
+            }
+        },
+        "dataOption": {
+            "displayName": "Data option",
+            "properties": {
+                "ptPassage": {
+                    "displayName": "Avec pt de passage",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "prctMode": {
+                    "displayName": "Mode %",
                     "type": {
                         "bool": true
                     }

@@ -9,4 +9,10 @@ TODO
 
 ## Configuration
 - Ajouter le stringresources
-- Configurer le capabilities avec les configs voulues
+
+## UI
+- Si valeur trop à gauche, aligner à droite et vice versa (10%) ou centrer le cas échéant.
+- Ajouter 0 à gauche
+- Ajout du point de passage
+- Ajout de la gestion par pourcentage
+- Reprendre le css de mercure

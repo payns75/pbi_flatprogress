@@ -541,6 +541,7 @@ var powerbi;
                     function VisualSettings() {
                         var _this = _super !== null && _super.apply(this, arguments) || this;
                         _this.dataDisplay = new dataDisplaySettings();
+                        _this.dataOption = new dataOptionSettings();
                         return _this;
                     }
                     return VisualSettings;
@@ -555,6 +556,14 @@ var powerbi;
                     return dataDisplaySettings;
                 }());
                 pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.dataDisplaySettings = dataDisplaySettings;
+                var dataOptionSettings = (function () {
+                    function dataOptionSettings() {
+                        this.ptPassage = true;
+                        this.prctMode = false;
+                    }
+                    return dataOptionSettings;
+                }());
+                pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.dataOptionSettings = dataOptionSettings;
             })(pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 || (visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = {}));
         })(visual = extensibility.visual || (extensibility.visual = {}));
     })(extensibility = powerbi.extensibility || (powerbi.extensibility = {}));
@@ -580,22 +589,33 @@ var powerbi;
                         left_container.appendChild(current_value);
                         var percent_value = document.createElement("div");
                         percent_value.className = "percent_value";
-                        this.percent_text = percent_value.appendChild(document.createTextNode("120%"));
+                        this.percent_text = percent_value.appendChild(document.createTextNode(""));
                         left_container.appendChild(percent_value);
                         var right_container = document.createElement("div");
                         right_container.className = "right_container";
                         var reste_value = document.createElement("div");
                         reste_value.className = "reste_value";
-                        this.reste_text = reste_value.appendChild(document.createTextNode("46"));
+                        this.reste_text = reste_value.appendChild(document.createTextNode(""));
                         right_container.appendChild(reste_value);
                         var reste_legend = document.createElement("div");
                         reste_legend.className = "reste_legend";
                         reste_legend.appendChild(document.createTextNode("Reste à faire"));
                         right_container.appendChild(reste_legend);
+                        this.bottom_container = document.createElement("div");
+                        this.bottom_container.className = "container_bottom";
+                        var ptpassage_value = document.createElement("div");
+                        ptpassage_value.className = "ptpassage_value";
+                        this.ptpassage_text = ptpassage_value.appendChild(document.createTextNode("0"));
+                        this.bottom_container.appendChild(ptpassage_value);
+                        var ptpassage_legend = document.createElement("div");
+                        ptpassage_legend.className = "ptpassage_legend";
+                        ptpassage_legend.appendChild(document.createTextNode("Point de passage"));
+                        this.bottom_container.appendChild(ptpassage_legend);
                         infos_container.appendChild(left_container);
                         infos_container.appendChild(right_container);
                         options.element.appendChild(infos_container);
                         this.svg = d3.select(options.element).append('svg');
+                        options.element.appendChild(this.bottom_container);
                         this.gcontainer = this.svg.append('g').classed('percenter', true);
                         var bar_height = 20;
                         this.back_rectangle = this.gcontainer
@@ -633,14 +653,15 @@ var powerbi;
                     Visual.prototype.update = function (options) {
                         var animation_duration = 500;
                         this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-                        var value = Visual.getvalue(options.dataViews[0].categorical, "measure") * 100;
-                        var objectif_value = Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
-                        this.reste_text.textContent = objectif_value - value > 0 ? (objectif_value - value).toString() : "0";
-                        this.percent_text.textContent = (value / objectif_value * 100).toFixed(0).toString() + "%";
-                        this.svg.attr("height", options.viewport.height);
+                        var value = +Visual.getvalue(options.dataViews[0].categorical, "measure");
+                        var objectif_value = +Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
+                        var pt_passage_value = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
+                        this.reste_text.textContent = objectif_value - value > 0 ? (objectif_value - value).toLocaleString() : "0";
+                        this.percent_text.textContent = (value / objectif_value * 100).toFixed(0).toLocaleString() + "%";
+                        this.svg.attr("height", 40);
                         this.svg.attr("width", options.viewport.width);
                         this.back_rectangle.data([options.viewport.width])
-                            .attr("fill", "#e0e0e0")
+                            .attr("fill", this.settings.dataDisplay.backColor)
                             .attr("width", function (d) { return d; });
                         var value_position = options.viewport.width * value / 100 - options.viewport.width * 10 / 100;
                         var objectif_position = options.viewport.width * objectif_value / 100 - options.viewport.width * 10 / 100;
@@ -652,8 +673,11 @@ var powerbi;
                             objectif_position = options.viewport.width - options.viewport.width * 10 / 100;
                             value_position = objectif_position * value / objectif_value;
                         }
+                        if (!this.settings.dataDisplay.animation) {
+                            animation_duration = 0;
+                        }
                         this.front_rectangle.data([value_position])
-                            .attr("fill", "#2196F3")
+                            .attr("fill", this.settings.dataDisplay.fill)
                             .transition()
                             .duration(animation_duration)
                             .attr("width", function (d) { return d; });
@@ -662,11 +686,13 @@ var powerbi;
                             .duration(animation_duration)
                             .attr("x", function (d) { return d; });
                         this.objectif_text.data([objectif_value])
-                            .text(function (d) { return d; })
+                            .text(function (d) { return d.toLocaleString(); })
                             .transition()
                             .duration(animation_duration)
                             .attr('x', objectif_position);
-                        this.value_text.textContent = value.toString();
+                        this.value_text.textContent = value.toLocaleString();
+                        this.bottom_container.className = this.settings.dataOption.ptPassage && pt_passage_value ? "container_bottom" : "none";
+                        this.ptpassage_text.textContent = pt_passage_value.toLocaleString();
                     };
                     Visual.parseSettings = function (dataView) {
                         return pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.VisualSettings.parse(dataView);
