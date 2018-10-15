@@ -1,13 +1,13 @@
 module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5  {
     "use strict";
     export class Visual implements IVisual {
-        private svg: d3.Selection<SVGElement>;
+        private svg: d3.Selection<d3.BaseType, {}, null, undefined>;
         private settings: VisualSettings;
-        private gcontainer: d3.Selection<SVGElement>;
-        private back_rectangle: d3.Selection<number>;
-        private front_rectangle: d3.Selection<number>;
-        private objectif_rectangle: d3.Selection<number>;
-        private objectif_text: d3.Selection<string>;
+        private gcontainer: d3.Selection<d3.BaseType, {}, null, undefined>;
+        private back_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
+        private front_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
+        private objectif_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
+        private objectif_text: d3.Selection<d3.BaseType, string, d3.BaseType, {}>;
         private value_text: Text;
         private percent_text: Text;
         private reste_text: Text;
@@ -45,7 +45,6 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             infos_container.appendChild(left_container);
             infos_container.appendChild(right_container);
             options.element.appendChild(infos_container);
-
             this.svg = d3.select(options.element).append('svg');
             this.gcontainer = this.svg.append('g').classed('percenter', true);
 
@@ -96,10 +95,8 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             this.reste_text.textContent = objectif_value - value > 0 ? (objectif_value - value).toString() : "0";
             this.percent_text.textContent = (value / objectif_value * 100).toFixed(0).toString() + "%";
 
-            this.svg.attr({
-                height: options.viewport.height,
-                width: options.viewport.width
-            });
+            this.svg.attr("height", options.viewport.height);
+            this.svg.attr("width", options.viewport.width);
 
             this.back_rectangle.data([options.viewport.width])
                 .attr("fill", "#e0e0e0")
@@ -121,12 +118,12 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 .transition()
                 .duration(animation_duration)
                 .attr("width", d => d);
-
+                
             this.objectif_rectangle.data([objectif_position])
                 .transition()
                 .duration(animation_duration)
                 .attr("x", d => d);
-
+                
             this.objectif_text.data([objectif_value])
                 .text(d => d)
                 .transition()

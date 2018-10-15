@@ -1,0 +1,42 @@
+{
+    "objectifs_val": [
+        {
+            "id": 0,
+            "name": "Assurance vie",
+            "TauxUC": 0.53,
+            "PrctUC": 53,
+            "Value": 221416,
+            "Objectif": 417775,
+            "Passage": 278516
+        },
+        {
+            "id": 1,
+            "name": "Prévoyance conseil IARD",
+            "TauxUC": 0.5,
+            "PrctUC": 50,
+            "Value": 27113,
+            "Objectif": 54379,
+            "Passage": 36253
+        },
+        {
+            "id": 2,
+            "name": "Conquête active Particuliers",
+            "TauxUC": 0.101,
+            "PrctUC": 101,
+            "Value": 21552,
+            "Objectif": 21320,
+            "Passage": null
+        }
+    ],
+    "objectifs_prct": [
+        {
+            "id": 0,
+            "name": "PNB Comissions",
+            "TauxUC": 0.103,
+            "PrctUC": 103,
+            "Value": 5.28,
+            "Objectif": 4.90,
+            "Passage": null
+        }
+    ]
+}
