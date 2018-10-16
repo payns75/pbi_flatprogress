@@ -127,7 +127,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             this.value_text.textContent = value.toLocaleString();
             let value_position = options.viewport.width * value / 100 - options.viewport.width * 10 / 100;
 
-            if (!isNaN(objectif_value) && objectif_value !== null) {
+            if (objectif_value) {
                 this.right_container.className = "right_container";
                 this.reste_text.textContent = objectif_value - value > 0 ? (objectif_value - value).toLocaleString() : "0";
                 this.percent_text.textContent = `${(+(value / objectif_value * 100).toFixed(0)).toLocaleString()}%`;

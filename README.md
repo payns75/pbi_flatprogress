@@ -5,7 +5,6 @@ TODO
 - Comment faire pour ignorer les fichiers de .tmp dans gitignore
 - Dans le sample_report, ajouter les données nécessaires au test
 - Faire passer les tests
-- Création d'un logo
 
 ## Questions
 - Arrondir à 2 le prct ?
