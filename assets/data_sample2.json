@@ -26,6 +26,24 @@
             "Value": 21552,
             "Objectif": 21320,
             "Passage": null
+        },
+        {
+            "id": 3,
+            "name": "Test objectif null",
+            "TauxUC": 0.101,
+            "PrctUC": 101,
+            "Value": 21552,
+            "Objectif": null,
+            "Passage": null
+        },
+        {
+            "id": 4,
+            "name": "Test valeur null",
+            "TauxUC": 0.101,
+            "PrctUC": 101,
+            "Value": null,
+            "Objectif": null,
+            "Passage": null
         }
     ],
     "objectifs_prct": [
@@ -37,6 +55,15 @@
             "Value": 5.28,
             "Objectif": 4.90,
             "Passage": null
+        },
+        {
+            "id": 0,
+            "name": "PNB Comissions Avec passage",
+            "TauxUC": 0.103,
+            "PrctUC": 103,
+            "Value": 5.28,
+            "Objectif": 4.90,
+            "Passage": 3
         }
     ]
 }

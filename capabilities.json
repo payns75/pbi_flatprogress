@@ -25,7 +25,6 @@
                         "max": 1
                     },
                     "objectif_measure": {
-                        "min": 1,
                         "max": 1
                     },
                     "pt_passage_measure": {
@@ -78,12 +77,6 @@
                                 "color": true
                             }
                         }
-                    }
-                },
-                "animation": {
-                    "displayName": "Animation",
-                    "type": {
-                        "bool": true
                     }
                 }
             }

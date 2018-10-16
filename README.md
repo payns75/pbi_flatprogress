@@ -7,12 +7,7 @@ TODO
 - Faire passer les tests
 - Création d'un logo
 
-## Configuration
-- Ajouter le stringresources
-
-## UI
-- Si valeur trop à gauche, aligner à droite et vice versa (10%) ou centrer le cas échéant.
-- Ajouter 0 à gauche
-- Ajout du point de passage
-- Ajout de la gestion par pourcentage
-- Reprendre le css de mercure
+## Questions
+- Arrondir à 2 le prct ?
+- Reprendre ou calculer valeur du prct ?
+- Ajouter un coef multiplicateur (option) en mode prct (aussi pour le point de passage)

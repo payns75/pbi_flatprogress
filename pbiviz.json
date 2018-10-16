@@ -19,15 +19,7 @@
   },
   "externalJS": [
     "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js",
-    "node_modules/d3-dispatch/build/d3-dispatch.min.js",
     "node_modules/d3-selection/dist/d3-selection.min.js",
-
-    "node_modules/d3-color/build/d3-color.min.js",
-    "node_modules/d3-ease/build/d3-ease.min.js",
-    "node_modules/d3-interpolate/build/d3-interpolate.min.js",
-    "node_modules/d3-timer/build/d3-timer.min.js",
-    "node_modules/d3-transition/build/d3-transition.min.js",
-
     "d3Injector.js"
   ],
   "style": "style/visual.less",

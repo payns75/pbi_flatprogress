@@ -10,7 +10,6 @@ module powerbi.extensibility.visual {
   export class dataDisplaySettings {
     public backColor: string = "#D3D3D3";
     public fill: string = "#16B1E6";
-    public animation: boolean = true;
   }
 
   export class dataOptionSettings {
