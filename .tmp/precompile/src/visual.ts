@@ -62,11 +62,12 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             infos_container.appendChild(left_container);
             infos_container.appendChild(this.right_container);
             options.element.appendChild(infos_container);
-            this.svg = d3.select(options.element).append('svg').attr("height", 40);
+
+            const bar_height = 30;
+            this.svg = d3.select(options.element).append('svg').attr("height", bar_height + 20);
             options.element.appendChild(this.bottom_container);
 
             this.gcontainer = this.svg.append('g').classed('percenter', true);
-            const bar_height = 20;
 
             this.back_rectangle = this.gcontainer
                 .append('g')
@@ -92,7 +93,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 .append("rect")
                 .attr("fill", "black")
                 .attr("height", bar_height)
-                .attr("width", 1)
+                .attr("width", 3)
                 .classed("none", true);
 
             this.objectif_text = this.gcontainer

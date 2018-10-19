@@ -7,6 +7,9 @@ TODO
 - Faire passer les tests
 
 ## Questions
-- Arrondir à 2 le prct ?
-- Reprendre ou calculer valeur du prct ?
-- Ajouter un coef multiplicateur (option) en mode prct (aussi pour le point de passage)
+- Arrondir à pram pour le prct & les valeurs
+- Reprendre ou calculer valeur du prct ? -> Ne rien calculer
+- Param de la hauteur de la barre
+- Point de passag en pointill + position fct valeur
+- Objectif ajouter un triangle
+- Revoir le chargement modulaire.

@@ -601,10 +601,10 @@ var powerbi;
                         infos_container.appendChild(left_container);
                         infos_container.appendChild(this.right_container);
                         options.element.appendChild(infos_container);
-                        this.svg = d3.select(options.element).append('svg').attr("height", 40);
+                        var bar_height = 30;
+                        this.svg = d3.select(options.element).append('svg').attr("height", bar_height + 20);
                         options.element.appendChild(this.bottom_container);
                         this.gcontainer = this.svg.append('g').classed('percenter', true);
-                        var bar_height = 20;
                         this.back_rectangle = this.gcontainer
                             .append('g')
                             .selectAll('rect')
@@ -627,7 +627,7 @@ var powerbi;
                             .append("rect")
                             .attr("fill", "black")
                             .attr("height", bar_height)
-                            .attr("width", 1)
+                            .attr("width", 3)
                             .classed("none", true);
                         this.objectif_text = this.gcontainer
                             .append('g')
@@ -722,8 +722,8 @@ var powerbi;
     (function (visuals) {
         var plugins;
         (function (plugins) {
-            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = {
-                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5',
+            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG = {
+                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG',
                 displayName: 'pbi_flatprogress_1_11',
                 class: 'Visual',
                 version: '1.0.0',
