@@ -1,13 +1,28 @@
 {
     "dataRoles": [
         {
-            "displayName": "Measure Data",
+            "displayName": "Value",
             "name": "measure",
             "kind": "Measure"
         },
         {
-            "displayName": "Objectif Data",
+            "displayName": "Objectif",
             "name": "objectif_measure",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Reste à faire",
+            "name": "todo_measure",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Pourcentage",
+            "name": "prct_measure",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Pourcentage Bar",
+            "name": "prctbar_measure",
             "kind": "Measure"
         },
         {
@@ -27,6 +42,15 @@
                     "objectif_measure": {
                         "max": 1
                     },
+                    "todo_measure": {
+                        "max": 1
+                    },
+                    "prct_measure": {
+                        "max": 1
+                    },
+                    "prctbar_measure": {
+                        "max": 1
+                    },
                     "pt_passage_measure": {
                         "max": 1
                     }
@@ -43,6 +67,21 @@
                         {
                             "bind": {
                                 "to": "objectif_measure"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "todo_measure"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "prct_measure"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "prctbar_measure"
                             }
                         },
                         {
@@ -77,6 +116,12 @@
                                 "color": true
                             }
                         }
+                    }
+                },
+                "bar_height": {
+                    "displayName": "Bar height",
+                    "type": {
+                        "numeric": true
                     }
                 }
             }

@@ -7,6 +7,7 @@ module powerbi.extensibility.visual {
         private back_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
         private front_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
         private objectif_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
+        private objectif_triangle: d3.Selection<d3.BaseType, {}, d3.BaseType, {}>;
         private objectif_text: d3.Selection<d3.BaseType, string, d3.BaseType, {}>;
         private zero_text: d3.Selection<d3.BaseType, {}, d3.BaseType, {}>;
         private right_container: HTMLElement;
@@ -15,6 +16,7 @@ module powerbi.extensibility.visual {
         private reste_text: Text;
         private bottom_container: HTMLElement;
         private ptpassage_text: Text;
+        private ptpassage_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
 
         constructor(options: VisualConstructorOptions) {
             const infos_container: HTMLElement = document.createElement("div");
@@ -64,6 +66,7 @@ module powerbi.extensibility.visual {
             options.element.appendChild(infos_container);
 
             const bar_height = 30;
+
             this.svg = d3.select(options.element).append('svg').attr("height", bar_height + 20);
             options.element.appendChild(this.bottom_container);
 
@@ -91,10 +94,17 @@ module powerbi.extensibility.visual {
                 .data([0])
                 .enter()
                 .append("rect")
-                .attr("fill", "black")
+                .attr("fill", "red")
                 .attr("height", bar_height)
                 .attr("width", 3)
                 .classed("none", true);
+
+            this.objectif_triangle = this.gcontainer
+                .append('g')
+                .append('path')
+                .attr("d", d3.symbol().type(d3.symbolTriangle).size(100))
+                .attr("transform", function (d) { return "translate(" + 10 + "," + 10 + ")"; })
+                .style("fill", "red");
 
             this.objectif_text = this.gcontainer
                 .append('g')
@@ -111,13 +121,30 @@ module powerbi.extensibility.visual {
                 .attr("y", bar_height + 20)
                 .attr('text-anchor', 'right')
                 .classed("none", true);
+
+            // TODO :
+            this.ptpassage_rectangle = this.gcontainer
+                .append('g')
+                .selectAll('rect')
+                .data([0])
+                .enter()
+                .append("rect")
+                .attr("fill", "green")
+                .attr("height", bar_height)
+                .attr("width", 3)
+                .classed("none", true);
         }
 
         public update(options: VisualUpdateOptions) {
             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+            const _settings = this.settings;
             const value = +Visual.getvalue(options.dataViews[0].categorical, "measure");
             const objectif_value = +Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
             const pt_passage_value = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
+
+            const todo_measure = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
+            const prct_measure = +Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+            const prctbar_measure = +Visual.getvalue(options.dataViews[0].categorical, "prctbar_measure");
 
             this.svg.attr("width", options.viewport.width);
 
@@ -134,6 +161,7 @@ module powerbi.extensibility.visual {
                 this.percent_text.textContent = `${(+(value / objectif_value * 100).toFixed(0)).toLocaleString()}%`;
 
                 let objectif_position = options.viewport.width * objectif_value / 100 - options.viewport.width * 10 / 100;
+                // let ptpassage_position = options.viewport.width * pt_passage_value / 100 - options.viewport.width * 10 / 100;
 
                 if (objectif_position < value_position) {
                     value_position = options.viewport.width - options.viewport.width * 10 / 100;
@@ -150,8 +178,11 @@ module powerbi.extensibility.visual {
                 this.zero_text.classed("none", objectif_position < 15);
 
                 this.objectif_rectangle.classed("none", false);
-                this.objectif_rectangle.data([objectif_position])
+                this.objectif_rectangle.data([objectif_position - 1])
                     .attr("x", d => d);
+
+                this.objectif_triangle.classed("none", false);
+                this.objectif_triangle.attr("transform", function (d) { return "translate(" + objectif_position + "," + (_settings.dataDisplay.bar_height - 4) + ")"; });
 
                 this.objectif_text.data([objectif_value])
                     .attr("text-anchor", objectif_position < 50 ? "right" : "middle")
@@ -170,11 +201,16 @@ module powerbi.extensibility.visual {
                 this.objectif_rectangle.classed("none", true);
                 this.right_container.className = "none";
                 this.objectif_text.text("");
+                this.objectif_triangle.classed("none", true);
                 this.percent_text.textContent = "";
             }
 
-            this.bottom_container.className = this.settings.dataOption.ptPassage && pt_passage_value ? "container_bottom" : "none";
-            this.ptpassage_text.textContent = pt_passage_value.toLocaleString();
+            if (this.settings.dataOption.ptPassage && pt_passage_value) {
+                this.bottom_container.className = "container_bottom";
+                this.ptpassage_text.textContent = pt_passage_value.toLocaleString();
+            } else {
+                this.bottom_container.className = "none";
+            }
         }
 
         private static parseSettings(dataView: DataView): VisualSettings {

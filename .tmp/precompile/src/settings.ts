@@ -10,6 +10,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
   export class dataDisplaySettings {
     public backColor: string = "#D3D3D3";
     public fill: string = "#16B1E6";
+    public bar_height: number = 30;
   }
 
   export class dataOptionSettings {

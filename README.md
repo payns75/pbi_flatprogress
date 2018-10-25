@@ -7,9 +7,10 @@ TODO
 - Faire passer les tests
 
 ## Questions
-- Arrondir à pram pour le prct & les valeurs
+- Arrondir à param pour le prct & les valeurs
 - Reprendre ou calculer valeur du prct ? -> Ne rien calculer
 - Param de la hauteur de la barre
 - Point de passag en pointill + position fct valeur
 - Objectif ajouter un triangle
 - Revoir le chargement modulaire.
+- Ajout tooltip des valeurs
