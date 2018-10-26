@@ -593,14 +593,17 @@ var powerbi;
                         this.right_container.appendChild(reste_legend);
                         this.bottom_container = document.createElement("div");
                         this.bottom_container.className = "none";
+                        this.ptpassage_container = document.createElement("div");
+                        this.ptpassage_container.className = "ptpassage_container";
+                        this.bottom_container.appendChild(this.ptpassage_container);
                         var ptpassage_value = document.createElement("div");
                         ptpassage_value.className = "ptpassage_value";
                         this.ptpassage_text = ptpassage_value.appendChild(document.createTextNode("0"));
-                        this.bottom_container.appendChild(ptpassage_value);
+                        this.ptpassage_container.appendChild(ptpassage_value);
                         var ptpassage_legend = document.createElement("div");
                         ptpassage_legend.className = "ptpassage_legend";
                         ptpassage_legend.appendChild(document.createTextNode("Point de passage"));
-                        this.bottom_container.appendChild(ptpassage_legend);
+                        this.ptpassage_container.appendChild(ptpassage_legend);
                         infos_container.appendChild(left_container);
                         infos_container.appendChild(this.right_container);
                         options.element.appendChild(infos_container);
@@ -652,16 +655,17 @@ var powerbi;
                             .attr("y", bar_height + 20)
                             .attr('text-anchor', 'right')
                             .classed("none", true);
-                        // TODO :
                         this.ptpassage_rectangle = this.gcontainer
                             .append('g')
-                            .selectAll('rect')
+                            .selectAll('line')
                             .data([0])
                             .enter()
-                            .append("rect")
-                            .attr("fill", "green")
-                            .attr("height", bar_height)
-                            .attr("width", 3)
+                            .append("line")
+                            .attr('y1', 0)
+                            .attr('y2', bar_height * 2)
+                            .attr("stroke", "green")
+                            .style("stroke-width", "3")
+                            .style("stroke-dasharray", "5,5")
                             .classed("none", true);
                     }
                     Visual.prototype.update = function (options) {
@@ -693,6 +697,7 @@ var powerbi;
                                 objectif_position_1 = options.viewport.width - options.viewport.width * 10 / 100;
                                 value_position = objectif_position_1 * value / objectif_value;
                             }
+                            var ptpassage_position = pt_passage_value / objectif_value * objectif_position_1;
                             this.front_rectangle.data([value_position])
                                 .attr("fill", this.settings.dataDisplay.fill)
                                 .attr("width", function (d) { return d; });
@@ -706,6 +711,13 @@ var powerbi;
                                 .attr("text-anchor", objectif_position_1 < 50 ? "right" : "middle")
                                 .text(function (d) { return d.toLocaleString(); })
                                 .attr('x', objectif_position_1);
+                            this.ptpassage_rectangle.classed("none", false);
+                            this.ptpassage_rectangle.data([ptpassage_position])
+                                .attr("x1", function (d) { return d; })
+                                .attr("x2", function (d) { return d; });
+                            console.log(this.ptpassage_container.clientWidth);
+                            var ptpassage_container_position = ptpassage_position - 150 / 2;
+                            this.ptpassage_container.setAttribute("style", "margin-left: " + ptpassage_container_position + "px;");
                             if (this.settings.dataOption.prctMode) {
                                 this.right_container.className = "none";
                                 this.percent_text.textContent = "";
@@ -720,6 +732,7 @@ var powerbi;
                             this.right_container.className = "none";
                             this.objectif_text.text("");
                             this.objectif_triangle.classed("none", true);
+                            this.ptpassage_rectangle.classed("none", true);
                             this.percent_text.textContent = "";
                         }
                         if (this.settings.dataOption.ptPassage && pt_passage_value) {

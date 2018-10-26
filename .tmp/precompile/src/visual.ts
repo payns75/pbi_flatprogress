@@ -15,6 +15,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
         private percent_text: Text;
         private reste_text: Text;
         private bottom_container: HTMLElement;
+        private ptpassage_container: HTMLElement;
         private ptpassage_text: Text;
         private ptpassage_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
 
@@ -51,15 +52,19 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             this.bottom_container = document.createElement("div");
             this.bottom_container.className = "none";
 
+            this.ptpassage_container = document.createElement("div");
+            this.ptpassage_container.className = "ptpassage_container";
+            this.bottom_container.appendChild(this.ptpassage_container);
+
             const ptpassage_value: HTMLElement = document.createElement("div");
             ptpassage_value.className = "ptpassage_value";
             this.ptpassage_text = ptpassage_value.appendChild(document.createTextNode("0"));
-            this.bottom_container.appendChild(ptpassage_value);
+            this.ptpassage_container.appendChild(ptpassage_value);
 
             const ptpassage_legend: HTMLElement = document.createElement("div");
             ptpassage_legend.className = "ptpassage_legend";
             ptpassage_legend.appendChild(document.createTextNode("Point de passage"));
-            this.bottom_container.appendChild(ptpassage_legend);
+            this.ptpassage_container.appendChild(ptpassage_legend);
 
             infos_container.appendChild(left_container);
             infos_container.appendChild(this.right_container);
@@ -122,16 +127,17 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 .attr('text-anchor', 'right')
                 .classed("none", true);
 
-            // TODO :
             this.ptpassage_rectangle = this.gcontainer
                 .append('g')
-                .selectAll('rect')
+                .selectAll('line')
                 .data([0])
                 .enter()
-                .append("rect")
-                .attr("fill", "green")
-                .attr("height", bar_height)
-                .attr("width", 3)
+                .append("line")
+                .attr('y1', 0)
+                .attr('y2', bar_height * 2)
+                .attr("stroke", "green")
+                .style("stroke-width", "3")
+                .style("stroke-dasharray", "5,5")
                 .classed("none", true);
         }
 
@@ -171,6 +177,8 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     value_position = objectif_position * value / objectif_value;
                 }
 
+                let ptpassage_position = pt_passage_value / objectif_value * objectif_position;
+
                 this.front_rectangle.data([value_position])
                     .attr("fill", this.settings.dataDisplay.fill)
                     .attr("width", d => d);
@@ -189,6 +197,15 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     .text(d => d.toLocaleString())
                     .attr('x', objectif_position);
 
+                this.ptpassage_rectangle.classed("none", false);
+                this.ptpassage_rectangle.data([ptpassage_position])
+                    .attr("x1", d => d)
+                    .attr("x2", d => d);
+
+                    console.log(this.ptpassage_container.clientWidth);
+                let ptpassage_container_position = ptpassage_position - 150/2;
+                this.ptpassage_container.setAttribute("style", `margin-left: ${ptpassage_container_position}px;`)
+
                 if (this.settings.dataOption.prctMode) {
                     this.right_container.className = "none";
                     this.percent_text.textContent = "";
@@ -202,6 +219,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 this.right_container.className = "none";
                 this.objectif_text.text("");
                 this.objectif_triangle.classed("none", true);
+                this.ptpassage_rectangle.classed("none", true);
                 this.percent_text.textContent = "";
             }
 

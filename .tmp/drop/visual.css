@@ -33,10 +33,10 @@
 .visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .reste_legend {
   font-size: 16px;
 }
-.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .container_bottom {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .ptpassage_container {
+  width: 150px;
+  text-align: center;
+  background-color: yellow;
 }
 .visual-pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG .ptpassage_value {
   fill: #333333;

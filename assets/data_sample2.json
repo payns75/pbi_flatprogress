@@ -19,6 +19,33 @@
             "Passage": 36253
         },
         {
+            "id": 10,
+            "name": "Prévoyance conseil IARD2",
+            "TauxUC": 0.5,
+            "PrctUC": 50,
+            "Value": 27113,
+            "Objectif": 54379,
+            "Passage": 3625
+        },
+        {
+            "id": 11,
+            "name": "Prévoyance conseil IARD3",
+            "TauxUC": 0.5,
+            "PrctUC": 50,
+            "Value": 27113,
+            "Objectif": 54379,
+            "Passage": 54253
+        },
+        {
+            "id": 12,
+            "name": "Prévoyance conseil IARD4",
+            "TauxUC": 0.5,
+            "PrctUC": 50,
+            "Value": 27113,
+            "Objectif": 54379,
+            "Passage": 542
+        },
+        {
             "id": 2,
             "name": "Conquête active Particuliers",
             "TauxUC": 0.101,
