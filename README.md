@@ -2,15 +2,14 @@ TODO
 =======
 
 ## General
-- Comment faire pour ignorer les fichiers de .tmp dans gitignore
-- Dans le sample_report, ajouter les données nécessaires au test
-- Faire passer les tests
-
-## Questions
-- Arrondir à param pour le prct & les valeurs
-- Reprendre ou calculer valeur du prct ? -> Ne rien calculer
-- Param de la hauteur de la barre
-- Point de passag en pointill + position fct valeur
-- Objectif ajouter un triangle
 - Revoir le chargement modulaire.
+- Réorganiser le capabilities.json
+
+## Visual
+- Arrondir à param pour le prct & les valeurs
+- Ajout multiplicateur pour les %
+- Ne rien calculer :
+    - todo_measure
+    - prct_measure
+    - prctbar_measure
 - Ajout tooltip des valeurs

@@ -1,11 +1,11 @@
 {
   "visual": {
-    "name": "pbiflatprogress111",
-    "displayName": "pbi_flatprogress_1_11",
+    "name": "flatprogress",
+    "displayName": "flatprogress",
     "guid": "pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5",
     "visualClassName": "Visual",
     "version": "1.0.0",
-    "description": "flat progress control",
+    "description": "Flat progress control",
     "supportUrl": "https://github.com/payns75/pbi_flatprogress",
     "gitHubUrl": "https://github.com/payns75/pbi_flatprogress"
   },

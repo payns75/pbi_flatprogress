@@ -123,6 +123,56 @@
                     "type": {
                         "numeric": true
                     }
+                },
+                "horizontal_margin": {
+                    "displayName": "Y margin",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "realisation_text": {
+                    "displayName": "Réalisation Text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "resteafaire_text": {
+                    "displayName": "A faire Text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "ptpassage_text": {
+                    "displayName": "Pt. Passage Text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "ptpassage_color": {
+                    "displayName": "Passage Fill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "objectif_text": {
+                    "displayName": "Objectif Text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "objectif_color": {
+                    "displayName": "Objectif Fill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 }
             }
         },

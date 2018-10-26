@@ -11,6 +11,13 @@ module powerbi.extensibility.visual {
     public backColor: string = "#D3D3D3";
     public fill: string = "#16B1E6";
     public bar_height: number = 30;
+    public horizontal_margin: number = 30;
+    public realisation_text: string = "Réalisation";
+    public resteafaire_text: string = "Reste à faire";
+    public ptpassage_text: string = "Point de passage";
+    public ptpassage_color: string = "#9c27b0";
+    public objectif_text: string = "Objectif:";
+    public objectif_color: string = "#1b5e20";
   }
 
   export class dataOptionSettings {
