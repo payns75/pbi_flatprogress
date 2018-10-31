@@ -5,7 +5,8 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
         private svg: d3.Selection<d3.BaseType, {}, null, undefined>;
         private settings: VisualSettings;
         private gcontainer: d3.Selection<d3.BaseType, {}, null, undefined>;
-        private back_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
+        // private back_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
+        private back_rectangle: HTMLElement;
         private front_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
         private objectif_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
         private objectif_triangle: d3.Selection<d3.BaseType, {}, d3.BaseType, {}>;
@@ -28,77 +29,56 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             this.visual_top.className = "visual_top";
             options.element.appendChild(this.visual_top);
 
-            const infos_container: HTMLElement = document.createElement("div");
-            infos_container.className = "container";
+            // const infos_container: HTMLElement = document.createElement("div");
+            // infos_container.className = "container";
 
-            const left_container: HTMLElement = document.createElement("div");
-            left_container.className = "left_container";
+            const infos_container_html = `
+                <div class="container">
+                    <div class="left_container">
+                        <div class="current_value_container">
+                            <div id="current_value_libelle" class="current_value_libelle"></div>
+                            <div id="current_value" class="current_value"></div>
+                        </div>
+                        <div id="percent_value" class="percent_value"></div>
+                    </div>
+                    <div class="right_container" id="right_container">
+                        <div id="reste_value" class="reste_value"></div>
+                        <div id="reste_legend" class="reste_legend"></div>
+                    </div>
+                </div>
+                <svg id="svg">
+                    <rect id="back_rectangle"></rect>
+                </svg>
+                <div id="container_bottom" class="container_bottom">
+                    <div id="ptpassage_container" class="ptpassage_container">
+                        <div id="ptpassage_value" class="ptpassage_value"></div>
+                        <div id="ptpassage_legend" class="ptpassage_legend"></div>
+                    </div>
+                </div>
+            `;
 
-            const current_value_container: HTMLElement = document.createElement("div");
-            current_value_container.className = "current_value_container";
+            this.visual_top.innerHTML = infos_container_html;
+            this.value_text_libelle = document.getElementById("current_value_libelle").appendChild(document.createTextNode(""));
+            this.value_text = document.getElementById("current_value").appendChild(document.createTextNode(""));
+            this.percent_text = document.getElementById("percent_value").appendChild(document.createTextNode(""));
+            this.reste_text = document.getElementById("reste_value").appendChild(document.createTextNode(""));
+            this.reste_libelle = document.getElementById("reste_legend").appendChild(document.createTextNode(""));
+            this.right_container = document.getElementById("right_container");
+            this.bottom_container = document.getElementById("container_bottom");
+            this.ptpassage_container = document.getElementById("ptpassage_container");
+            this.ptpassage_text = document.getElementById("ptpassage_value").appendChild(document.createTextNode(""));
+            this.ptpassage_libelle = document.getElementById("ptpassage_legend").appendChild(document.createTextNode(""));
+            this.back_rectangle = document.getElementById("back_rectangle");
 
-            const current_value_libelle: HTMLElement = document.createElement("div");
-            current_value_libelle.className = "current_value_libelle";
-            this.value_text_libelle = current_value_libelle.appendChild(document.createTextNode(""));
-            current_value_container.appendChild(current_value_libelle);
-
-            const current_value: HTMLElement = document.createElement("div");
-            current_value.className = "current_value";
-            this.value_text = current_value.appendChild(document.createTextNode(""));
-            current_value_container.appendChild(current_value);
-
-            left_container.appendChild(current_value_container);
-
-            const percent_value: HTMLElement = document.createElement("div");
-            percent_value.className = "percent_value";
-            this.percent_text = percent_value.appendChild(document.createTextNode(""));
-            left_container.appendChild(percent_value);
-
-            this.right_container = document.createElement("div");
-            this.right_container.className = "none";
-
-            const reste_value: HTMLElement = document.createElement("div");
-            reste_value.className = "reste_value";
-            this.reste_text = reste_value.appendChild(document.createTextNode(""));
-            this.right_container.appendChild(reste_value);
-
-            const reste_legend: HTMLElement = document.createElement("div");
-            reste_legend.className = "reste_legend";
-            this.reste_libelle = reste_legend.appendChild(document.createTextNode(""));
-            this.right_container.appendChild(reste_legend);
-
-            this.bottom_container = document.createElement("div");
-            this.bottom_container.className = "none";
-
-            this.ptpassage_container = document.createElement("div");
-            this.ptpassage_container.className = "ptpassage_container";
-            this.bottom_container.appendChild(this.ptpassage_container);
-
-            const ptpassage_value: HTMLElement = document.createElement("div");
-            ptpassage_value.className = "ptpassage_value";
-            this.ptpassage_text = ptpassage_value.appendChild(document.createTextNode("0"));
-            this.ptpassage_container.appendChild(ptpassage_value);
-
-            const ptpassage_legend: HTMLElement = document.createElement("div");
-            ptpassage_legend.className = "ptpassage_legend";
-            this.ptpassage_libelle = ptpassage_legend.appendChild(document.createTextNode(""));
-            this.ptpassage_container.appendChild(ptpassage_legend);
-
-            infos_container.appendChild(left_container);
-            infos_container.appendChild(this.right_container);
-            this.visual_top.appendChild(infos_container);
-
-            this.svg = d3.select(this.visual_top).append('svg');
-            this.visual_top.appendChild(this.bottom_container);
-
+            this.svg = d3.select(document.getElementById("svg"));
             this.gcontainer = this.svg.append('g').classed('percenter', true);
 
-            this.back_rectangle = this.gcontainer
-                .append('g')
-                .selectAll('rect')
-                .data([this.visual_top.offsetWidth])
-                .enter()
-                .append("rect");
+            // this.back_rectangle = this.gcontainer
+            //     .append('g')
+            //     .selectAll('rect')
+            //     .data([this.visual_top.offsetWidth])
+            //     .enter()
+            //     .append("rect");
 
             this.front_rectangle = this.gcontainer
                 .append('g')
@@ -122,7 +102,8 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 .append('g')
                 .append('path')
                 .attr("d", d3.symbol().type(d3.symbolTriangle).size(100))
-                .attr("transform", function (d) { return "translate(" + 10 + "," + 10 + ")"; });
+                .attr("transform", function (d) { return "translate(" + 10 + "," + 10 + ")"; })
+                .classed("none", true);
 
             this.objectif_text = this.gcontainer
                 .append('g')
@@ -169,10 +150,14 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 .attr("width", gwidth)
                 .attr("height", this.settings.dataDisplay.bar_height + svg_bottom_height);
 
-            this.back_rectangle.data([gwidth])
-                .attr("fill", this.settings.dataDisplay.backColor)
-                .attr("width", d => d)
-                .attr("height", this.settings.dataDisplay.bar_height);
+
+            // HTMLElement.prototype["attr"] = function(name: string, value: any){
+
+            // }
+
+            this.back_rectangle.setAttribute("fill", this.settings.dataDisplay.backColor);
+            this.back_rectangle.setAttribute("width", gwidth.toString());
+            this.back_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height.toString());
 
             this.value_text_libelle.textContent = this.settings.dataDisplay.realisation_text;
             this.value_text.textContent = value.toLocaleString();
