@@ -578,24 +578,31 @@ var powerbi;
                 "use strict";
                 var Visual = (function () {
                     function Visual(options) {
+                        this.data = {};
                         this.visual_top = document.createElement("div");
                         this.visual_top.className = "visual_top";
                         options.element.appendChild(this.visual_top);
                         // const infos_container: HTMLElement = document.createElement("div");
                         // infos_container.className = "container";
-                        var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\" id=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                </svg>\n                <div id=\"container_bottom\" class=\"container_bottom\">\n                    <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                        <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                        <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                    </div>\n                </div>\n            ";
+                        var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\" id=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                </svg>\n                <div id=\"container_bottom\" class=\"container_bottom\">\n                    <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                        <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                        <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                    </div>\n                </div>\n            ";
                         this.visual_top.innerHTML = infos_container_html;
+                        var nodes = this.visual_top.querySelectorAll("*");
+                        for (var i = 0; i < nodes.length; i++) {
+                            if (nodes[i].id) {
+                                this.data[nodes[i].id] = nodes[i];
+                            }
+                        }
                         this.value_text_libelle = document.getElementById("current_value_libelle").appendChild(document.createTextNode(""));
                         this.value_text = document.getElementById("current_value").appendChild(document.createTextNode(""));
                         this.percent_text = document.getElementById("percent_value").appendChild(document.createTextNode(""));
                         this.reste_text = document.getElementById("reste_value").appendChild(document.createTextNode(""));
                         this.reste_libelle = document.getElementById("reste_legend").appendChild(document.createTextNode(""));
                         this.right_container = document.getElementById("right_container");
-                        this.bottom_container = document.getElementById("container_bottom");
+                        /* this.bottom_container = document.getElementById("container_bottom");
                         this.ptpassage_container = document.getElementById("ptpassage_container");
                         this.ptpassage_text = document.getElementById("ptpassage_value").appendChild(document.createTextNode(""));
-                        this.ptpassage_libelle = document.getElementById("ptpassage_legend").appendChild(document.createTextNode(""));
-                        this.back_rectangle = document.getElementById("back_rectangle");
+                        this.ptpassage_libelle = document.getElementById("ptpassage_legend").appendChild(document.createTextNode("")); */
+                        // this.back_rectangle = document.getElementById("back_rectangle");
                         this.svg = d3.select(document.getElementById("svg"));
                         this.gcontainer = this.svg.append('g').classed('percenter', true);
                         // this.back_rectangle = this.gcontainer
@@ -604,12 +611,12 @@ var powerbi;
                         //     .data([this.visual_top.offsetWidth])
                         //     .enter()
                         //     .append("rect");
-                        this.front_rectangle = this.gcontainer
-                            .append('g')
-                            .selectAll('rect')
-                            .data([0])
-                            .enter()
-                            .append("rect");
+                        /*     this.front_rectangle = this.gcontainer
+                                .append('g')
+                                .selectAll('rect')
+                                .data([0])
+                                .enter()
+                                .append("rect"); */
                         this.objectif_rectangle = this.gcontainer
                             .append('g')
                             .selectAll('line')
@@ -667,9 +674,9 @@ var powerbi;
                             .attr("height", this.settings.dataDisplay.bar_height + svg_bottom_height);
                         // HTMLElement.prototype["attr"] = function(name: string, value: any){
                         // }
-                        this.back_rectangle.setAttribute("fill", this.settings.dataDisplay.backColor);
-                        this.back_rectangle.setAttribute("width", gwidth.toString());
-                        this.back_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height.toString());
+                        this.data.back_rectangle.setAttribute("fill", this.settings.dataDisplay.backColor);
+                        this.data.back_rectangle.setAttribute("width", gwidth.toString());
+                        this.data.back_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height.toString());
                         this.value_text_libelle.textContent = this.settings.dataDisplay.realisation_text;
                         this.value_text.textContent = value.toLocaleString();
                         var value_position = gwidth * value / 100 - gwidth * 10 / 100;
@@ -688,10 +695,13 @@ var powerbi;
                                 objectif_position = gwidth - gwidth * 10 / 100;
                                 value_position = objectif_position * value / objectif_value;
                             }
-                            this.front_rectangle.data([value_position])
+                            this.data.front_rectangle.setAttribute("fill", this.settings.dataDisplay.fill);
+                            this.data.front_rectangle.setAttribute("width", value_position);
+                            this.data.front_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height);
+                            /* this.front_rectangle.data([value_position])
                                 .attr("fill", this.settings.dataDisplay.fill)
-                                .attr("width", function (d) { return d; })
-                                .attr("height", this.settings.dataDisplay.bar_height);
+                                .attr("width", d => d)
+                                .attr("height", this.settings.dataDisplay.bar_height); */
                             this.zero_text.classed("none", objectif_position < 15);
                             this.zero_text.attr("y", this.settings.dataDisplay.bar_height + svg_bottom_height);
                             this.objectif_rectangle.classed("none", false);
@@ -718,7 +728,7 @@ var powerbi;
                             }
                         }
                         else {
-                            this.front_rectangle.attr("width", "0");
+                            this.data.front_rectangle.attr("width", "0");
                             this.zero_text.classed("none", true);
                             this.objectif_rectangle.classed("none", true);
                             this.right_container.className = "none";
@@ -729,9 +739,9 @@ var powerbi;
                         this.ptpassage_rectangle.classed('none', true);
                         var ptpassage_position = pt_passage_value / objectif_value * objectif_position;
                         if (this.settings.dataOption.ptPassage && pt_passage_value) {
-                            this.bottom_container.className = "container_bottom";
-                            this.ptpassage_libelle.textContent = this.settings.dataDisplay.ptpassage_text;
-                            this.ptpassage_text.textContent = pt_passage_value.toLocaleString();
+                            this.data.container_bottom.className = "container_bottom";
+                            this.data.ptpassage_legend.textContent = this.settings.dataDisplay.ptpassage_text;
+                            this.data.ptpassage_value.textContent = pt_passage_value.toLocaleString();
                             if (ptpassage_position) {
                                 this.ptpassage_rectangle.classed('none', false);
                                 this.ptpassage_rectangle.data([ptpassage_position])
@@ -742,11 +752,11 @@ var powerbi;
                                 var ptpassage_container_position = ptpassage_position - 150 / 2;
                                 ptpassage_container_position = ptpassage_container_position < 0 ? 0 : ptpassage_container_position;
                                 ptpassage_container_position = ptpassage_container_position > gwidth - 150 / 2 ? gwidth - 150 : ptpassage_container_position;
-                                this.ptpassage_container.setAttribute("style", "margin-left: " + ptpassage_container_position + "px;color:" + this.settings.dataDisplay.ptpassage_color);
+                                this.data.ptpassage_container.setAttribute("style", "margin-left: " + ptpassage_container_position + "px;color:" + this.settings.dataDisplay.ptpassage_color);
                             }
                         }
                         else {
-                            this.bottom_container.className = "none";
+                            this.data.container_bottom.className = "none";
                         }
                     };
                     Visual.parseSettings = function (dataView) {

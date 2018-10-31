@@ -6,8 +6,8 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
         private settings: VisualSettings;
         private gcontainer: d3.Selection<d3.BaseType, {}, null, undefined>;
         // private back_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
-        private back_rectangle: HTMLElement;
-        private front_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
+        // private back_rectangle: HTMLElement;
+        // private front_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
         private objectif_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
         private objectif_triangle: d3.Selection<d3.BaseType, {}, d3.BaseType, {}>;
         private objectif_text: d3.Selection<d3.BaseType, string, d3.BaseType, {}>;
@@ -18,11 +18,13 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
         private percent_text: Text;
         private reste_text: Text;
         private reste_libelle: Text;
-        private bottom_container: HTMLElement;
-        private ptpassage_container: HTMLElement;
-        private ptpassage_text: Text;
-        private ptpassage_libelle: Text;
+        /*  private bottom_container: HTMLElement;
+         private ptpassage_container: HTMLElement;
+         private ptpassage_text: Text;
+         private ptpassage_libelle: Text; */
         private ptpassage_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
+
+        private data: any = {};
 
         constructor(options: VisualConstructorOptions) {
             this.visual_top = document.createElement("div");
@@ -48,6 +50,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 </div>
                 <svg id="svg">
                     <rect id="back_rectangle"></rect>
+                    <rect id="front_rectangle"></rect>
                 </svg>
                 <div id="container_bottom" class="container_bottom">
                     <div id="ptpassage_container" class="ptpassage_container">
@@ -58,17 +61,29 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             `;
 
             this.visual_top.innerHTML = infos_container_html;
+
+            const nodes = this.visual_top.querySelectorAll("*");
+
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].id) {
+                    this.data[nodes[i].id] = nodes[i];
+                }
+            }
+
+
             this.value_text_libelle = document.getElementById("current_value_libelle").appendChild(document.createTextNode(""));
             this.value_text = document.getElementById("current_value").appendChild(document.createTextNode(""));
             this.percent_text = document.getElementById("percent_value").appendChild(document.createTextNode(""));
             this.reste_text = document.getElementById("reste_value").appendChild(document.createTextNode(""));
             this.reste_libelle = document.getElementById("reste_legend").appendChild(document.createTextNode(""));
             this.right_container = document.getElementById("right_container");
-            this.bottom_container = document.getElementById("container_bottom");
+
+            /* this.bottom_container = document.getElementById("container_bottom");
             this.ptpassage_container = document.getElementById("ptpassage_container");
             this.ptpassage_text = document.getElementById("ptpassage_value").appendChild(document.createTextNode(""));
-            this.ptpassage_libelle = document.getElementById("ptpassage_legend").appendChild(document.createTextNode(""));
-            this.back_rectangle = document.getElementById("back_rectangle");
+            this.ptpassage_libelle = document.getElementById("ptpassage_legend").appendChild(document.createTextNode("")); */
+
+           // this.back_rectangle = document.getElementById("back_rectangle");
 
             this.svg = d3.select(document.getElementById("svg"));
             this.gcontainer = this.svg.append('g').classed('percenter', true);
@@ -80,12 +95,12 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             //     .enter()
             //     .append("rect");
 
-            this.front_rectangle = this.gcontainer
-                .append('g')
-                .selectAll('rect')
-                .data([0])
-                .enter()
-                .append("rect");
+            /*     this.front_rectangle = this.gcontainer
+                    .append('g')
+                    .selectAll('rect')
+                    .data([0])
+                    .enter()
+                    .append("rect"); */
 
             this.objectif_rectangle = this.gcontainer
                 .append('g')
@@ -155,9 +170,9 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
 
             // }
 
-            this.back_rectangle.setAttribute("fill", this.settings.dataDisplay.backColor);
-            this.back_rectangle.setAttribute("width", gwidth.toString());
-            this.back_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height.toString());
+            this.data.back_rectangle.setAttribute("fill", this.settings.dataDisplay.backColor);
+            this.data.back_rectangle.setAttribute("width", gwidth.toString());
+            this.data.back_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height.toString());
 
             this.value_text_libelle.textContent = this.settings.dataDisplay.realisation_text;
             this.value_text.textContent = value.toLocaleString();
@@ -181,13 +196,17 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     value_position = objectif_position * value / objectif_value;
                 }
 
-                this.front_rectangle.data([value_position])
+                this.data.front_rectangle.setAttribute("fill", this.settings.dataDisplay.fill);
+                this.data.front_rectangle.setAttribute("width", value_position);
+                this.data.front_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height);
+
+                /* this.front_rectangle.data([value_position])
                     .attr("fill", this.settings.dataDisplay.fill)
                     .attr("width", d => d)
-                    .attr("height", this.settings.dataDisplay.bar_height);
+                    .attr("height", this.settings.dataDisplay.bar_height); */
 
                 this.zero_text.classed("none", objectif_position < 15);
-                this.zero_text.attr("y", this.settings.dataDisplay.bar_height + svg_bottom_height)
+                this.zero_text.attr("y", this.settings.dataDisplay.bar_height + svg_bottom_height);
 
                 this.objectif_rectangle.classed("none", false);
                 this.objectif_rectangle.data([objectif_position])
@@ -215,7 +234,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     this.value_text.textContent += "%";
                 }
             } else {
-                this.front_rectangle.attr("width", "0");
+                this.data.front_rectangle.attr("width", "0");
                 this.zero_text.classed("none", true);
                 this.objectif_rectangle.classed("none", true);
                 this.right_container.className = "none";
@@ -227,9 +246,9 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             this.ptpassage_rectangle.classed('none', true);
             let ptpassage_position = pt_passage_value / objectif_value * objectif_position;
             if (this.settings.dataOption.ptPassage && pt_passage_value) {
-                this.bottom_container.className = "container_bottom";
-                this.ptpassage_libelle.textContent = this.settings.dataDisplay.ptpassage_text;
-                this.ptpassage_text.textContent = pt_passage_value.toLocaleString();
+                this.data.container_bottom.className = "container_bottom";
+                this.data.ptpassage_legend.textContent = this.settings.dataDisplay.ptpassage_text;
+                this.data.ptpassage_value.textContent = pt_passage_value.toLocaleString();
 
                 if (ptpassage_position) {
                     this.ptpassage_rectangle.classed('none', false);
@@ -243,10 +262,10 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     ptpassage_container_position = ptpassage_container_position < 0 ? 0 : ptpassage_container_position;
                     ptpassage_container_position = ptpassage_container_position > gwidth - 150 / 2 ? gwidth - 150 : ptpassage_container_position;
 
-                    this.ptpassage_container.setAttribute("style", `margin-left: ${ptpassage_container_position}px;color:${this.settings.dataDisplay.ptpassage_color}`)
+                    this.data.ptpassage_container.setAttribute("style", `margin-left: ${ptpassage_container_position}px;color:${this.settings.dataDisplay.ptpassage_color}`);
                 }
             } else {
-                this.bottom_container.className = "none";
+                this.data.container_bottom.className = "none";
             }
         }
 
