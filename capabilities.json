@@ -21,11 +21,6 @@
             "kind": "Measure"
         },
         {
-            "displayName": "Pourcentage Bar",
-            "name": "prctbar_measure",
-            "kind": "Measure"
-        },
-        {
             "displayName": "Point de Passage",
             "name": "pt_passage_measure",
             "kind": "Measure"
@@ -46,9 +41,6 @@
                         "max": 1
                     },
                     "prct_measure": {
-                        "max": 1
-                    },
-                    "prctbar_measure": {
                         "max": 1
                     },
                     "pt_passage_measure": {
@@ -77,11 +69,6 @@
                         {
                             "bind": {
                                 "to": "prct_measure"
-                            }
-                        },
-                        {
-                            "bind": {
-                                "to": "prctbar_measure"
                             }
                         },
                         {

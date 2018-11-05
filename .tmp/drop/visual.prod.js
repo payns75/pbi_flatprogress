@@ -576,35 +576,83 @@ var powerbi;
             var pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5;
             (function (pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5) {
                 "use strict";
-                var Visual = (function () {
-                    function Visual(options) {
+                var DomManipulation = (function () {
+                    function DomManipulation(element) {
+                        this.element = element;
                         this.data = {};
-                        this.visual_top = document.createElement("div");
-                        this.visual_top.className = "visual_top";
-                        options.element.appendChild(this.visual_top);
-                        // const infos_container: HTMLElement = document.createElement("div");
-                        // infos_container.className = "container";
-                        var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\" id=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                </svg>\n                <div id=\"container_bottom\" class=\"container_bottom\">\n                    <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                        <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                        <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                    </div>\n                </div>\n            ";
-                        this.visual_top.innerHTML = infos_container_html;
-                        var nodes = this.visual_top.querySelectorAll("*");
+                        this.getvalue = function (item, name) {
+                            return item[name] && typeof (item[name]) === "function" ? item[name]() : item[name];
+                        };
+                        var nodes = element.querySelectorAll("*");
                         for (var i = 0; i < nodes.length; i++) {
                             if (nodes[i].id) {
                                 this.data[nodes[i].id] = nodes[i];
                             }
                         }
-                        this.value_text_libelle = document.getElementById("current_value_libelle").appendChild(document.createTextNode(""));
-                        this.value_text = document.getElementById("current_value").appendChild(document.createTextNode(""));
-                        this.percent_text = document.getElementById("percent_value").appendChild(document.createTextNode(""));
-                        this.reste_text = document.getElementById("reste_value").appendChild(document.createTextNode(""));
-                        this.reste_libelle = document.getElementById("reste_legend").appendChild(document.createTextNode(""));
-                        this.right_container = document.getElementById("right_container");
+                    }
+                    DomManipulation.prototype.update = function (vm) {
+                        var _this = this;
+                        vm.forEach(function (item) {
+                            var el = _this.data[item.id];
+                            var visible = false;
+                            if (item["visible"] !== undefined) {
+                                el.style.visibility = _this.getvalue(item, "visible") ? "visible" : "collapse";
+                                visible = true;
+                            }
+                            else {
+                                visible = true;
+                            }
+                            if (visible) {
+                                if (item["value"] !== undefined) {
+                                    var value = _this.getvalue(item, "value");
+                                    el.innerHTML = value ? String(value) : "";
+                                }
+                                if (item["attr"] !== undefined) {
+                                    for (var attr_name in item["attr"]) {
+                                        var v = _this.getvalue(item["attr"], attr_name);
+                                        if (_this.getvalue(item["attr"], attr_name)) {
+                                            el.setAttribute(attr_name, v);
+                                        }
+                                        else {
+                                            el.removeAttribute(attr_name);
+                                        }
+                                    }
+                                }
+                                if (item["style"] !== undefined) {
+                                    for (var style_name in item["style"]) {
+                                        var v = _this.getvalue(item["style"], style_name);
+                                        el.style[style_name] = v ? v : "";
+                                    }
+                                }
+                            }
+                        });
+                    };
+                    return DomManipulation;
+                }());
+                pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.DomManipulation = DomManipulation;
+                var Visual = (function () {
+                    function Visual(options) {
+                        this.visual_top = document.createElement("div");
+                        this.visual_top.className = "visual_top";
+                        options.element.appendChild(this.visual_top);
+                        // const infos_container: HTMLElement = document.createElement("div");
+                        // infos_container.className = "container";
+                        var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\"></text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                    <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                </div>\n            ";
+                        this.visual_top.innerHTML = infos_container_html;
+                        this.engine = new DomManipulation(this.visual_top);
+                        // this.value_text_libelle = document.getElementById("current_value_libelle").appendChild(document.createTextNode(""));
+                        // this.value_text = document.getElementById("current_value").appendChild(document.createTextNode(""));
+                        // this.percent_text = document.getElementById("percent_value").appendChild(document.createTextNode(""));
+                        // this.reste_text = document.getElementById("reste_value").appendChild(document.createTextNode(""));
+                        // this.reste_libelle = document.getElementById("reste_legend").appendChild(document.createTextNode(""));
+                        // this.right_container = document.getElementById("right_container");
                         /* this.bottom_container = document.getElementById("container_bottom");
                         this.ptpassage_container = document.getElementById("ptpassage_container");
                         this.ptpassage_text = document.getElementById("ptpassage_value").appendChild(document.createTextNode(""));
                         this.ptpassage_libelle = document.getElementById("ptpassage_legend").appendChild(document.createTextNode("")); */
                         // this.back_rectangle = document.getElementById("back_rectangle");
-                        this.svg = d3.select(document.getElementById("svg"));
-                        this.gcontainer = this.svg.append('g').classed('percenter', true);
+                        // this.svg = d3.select(document.getElementById("svg"));
+                        // this.gcontainer = this.svg.append('g').classed('percenter', true);
                         // this.back_rectangle = this.gcontainer
                         //     .append('g')
                         //     .selectAll('rect')
@@ -617,147 +665,243 @@ var powerbi;
                                 .data([0])
                                 .enter()
                                 .append("rect"); */
-                        this.objectif_rectangle = this.gcontainer
-                            .append('g')
-                            .selectAll('line')
-                            .data([0])
-                            .enter()
-                            .append("line")
-                            .attr('y1', 0)
-                            .style("stroke-width", "1")
-                            .attr("width", 3)
-                            .classed("none", true);
-                        this.objectif_triangle = this.gcontainer
-                            .append('g')
-                            .append('path')
-                            .attr("d", d3.symbol().type(d3.symbolTriangle).size(100))
-                            .attr("transform", function (d) { return "translate(" + 10 + "," + 10 + ")"; })
-                            .classed("none", true);
-                        this.objectif_text = this.gcontainer
-                            .append('g')
-                            .selectAll('text')
-                            .data([''])
-                            .enter()
-                            .append('text');
-                        this.zero_text = this.gcontainer
-                            .append('g')
-                            .append('text')
-                            .text("0")
-                            .attr('text-anchor', 'right')
-                            .classed("none", true);
-                        this.ptpassage_rectangle = this.gcontainer
-                            .append('g')
-                            .selectAll('line')
-                            .data([0])
-                            .enter()
-                            .append("line")
-                            .attr('y1', 0)
-                            .style("stroke-width", "3")
-                            .style("stroke-dasharray", "5,5")
-                            .classed("none", true);
+                        // this.objectif_rectangle = this.gcontainer
+                        //     .append('g')
+                        //     .selectAll('line')
+                        //     .data([0])
+                        //     .enter()
+                        //     .append("line")
+                        //     .attr('y1', 0)
+                        //     .style("stroke-width", "1")
+                        //     .attr("width", 3)
+                        //     .classed("none", true);
+                        // this.objectif_triangle = this.gcontainer
+                        //     .append('g')
+                        //     .append('path')
+                        //     .attr("d", d3.symbol().type(d3.symbolTriangle).size(100))
+                        //     .attr("transform", function (d) { return "translate(" + 10 + "," + 10 + ")"; })
+                        //     .classed("none", true);
+                        // this.objectif_text = this.gcontainer
+                        //     .append('g')
+                        //     .selectAll('text')
+                        //     .data([''])
+                        //     .enter()
+                        //     .append('text');
+                        // this.zero_text = this.gcontainer
+                        //     .append('g')
+                        //     .append('text')
+                        //     .text("0")
+                        //     .attr('text-anchor', 'right')
+                        //     .classed("none", true);
+                        // this.ptpassage_rectangle = this.gcontainer
+                        //     .append('g')
+                        //     .selectAll('line')
+                        //     .data([0])
+                        //     .enter()
+                        //     .append("line")
+                        //     .attr('y1', 0)
+                        //     .style("stroke-width", "3")
+                        //     .style("stroke-dasharray", "5,5")
+                        //     .classed("none", true);
                     }
                     Visual.prototype.update = function (options) {
-                        var _this = this;
                         this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
                         this.visual_top.setAttribute("style", "height:" + options.viewport.height + "px;margin: 0 " + this.settings.dataDisplay.horizontal_margin + "px");
                         var gwidth = this.visual_top.clientWidth;
                         var svg_bottom_height = 36;
                         var _settings = this.settings;
-                        var value = +Visual.getvalue(options.dataViews[0].categorical, "measure");
-                        var objectif_value = +Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
+                        var value = Visual.getvalue(options.dataViews[0].categorical, "measure");
+                        var objectif_value = Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
                         var pt_passage_value = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
                         var todo_measure = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
-                        var prct_measure = +Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
-                        var prctbar_measure = +Visual.getvalue(options.dataViews[0].categorical, "prctbar_measure");
-                        this.svg
-                            .attr("width", gwidth)
-                            .attr("height", this.settings.dataDisplay.bar_height + svg_bottom_height);
-                        // HTMLElement.prototype["attr"] = function(name: string, value: any){
-                        // }
-                        this.data.back_rectangle.setAttribute("fill", this.settings.dataDisplay.backColor);
-                        this.data.back_rectangle.setAttribute("width", gwidth.toString());
-                        this.data.back_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height.toString());
-                        this.value_text_libelle.textContent = this.settings.dataDisplay.realisation_text;
-                        this.value_text.textContent = value.toLocaleString();
-                        var value_position = gwidth * value / 100 - gwidth * 10 / 100;
+                        var prct_measure = Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+                        var front_total_width = gwidth - gwidth * 10 / 100;
+                        var value_position = 0;
                         var objectif_position = 0;
-                        if (objectif_value) {
-                            this.right_container.className = "right_container";
-                            this.reste_libelle.textContent = this.settings.dataDisplay.resteafaire_text;
-                            this.reste_text.textContent = objectif_value - value > 0 ? (objectif_value - value).toLocaleString() : "0";
-                            this.percent_text.textContent = (+(value / objectif_value * 100).toFixed(0)).toLocaleString() + "%";
-                            objectif_position = gwidth * objectif_value / 100 - gwidth * 10 / 100;
-                            if (objectif_position < value_position) {
-                                value_position = gwidth - gwidth * 10 / 100;
-                                objectif_position = value_position * objectif_value / value;
-                            }
-                            else {
-                                objectif_position = gwidth - gwidth * 10 / 100;
-                                value_position = objectif_position * value / objectif_value;
-                            }
-                            this.data.front_rectangle.setAttribute("fill", this.settings.dataDisplay.fill);
-                            this.data.front_rectangle.setAttribute("width", value_position);
-                            this.data.front_rectangle.setAttribute("height", this.settings.dataDisplay.bar_height);
-                            /* this.front_rectangle.data([value_position])
-                                .attr("fill", this.settings.dataDisplay.fill)
-                                .attr("width", d => d)
-                                .attr("height", this.settings.dataDisplay.bar_height); */
-                            this.zero_text.classed("none", objectif_position < 15);
-                            this.zero_text.attr("y", this.settings.dataDisplay.bar_height + svg_bottom_height);
-                            this.objectif_rectangle.classed("none", false);
-                            this.objectif_rectangle.data([objectif_position])
-                                .attr("x1", function (d) { return d; })
-                                .attr("x2", function (d) { return d; })
-                                .attr("y2", this.settings.dataDisplay.bar_height)
-                                .attr("stroke", this.settings.dataDisplay.objectif_color);
-                            this.objectif_triangle.classed("none", false);
-                            this.objectif_triangle
-                                .style("fill", this.settings.dataDisplay.objectif_color)
-                                .attr("transform", function (d) { return "translate(" + objectif_position + "," + (_settings.dataDisplay.bar_height - 4 + 13) + ")"; });
-                            this.objectif_text.data([objectif_value])
-                                .attr("text-anchor", objectif_position < 100 ? "right" : "middle")
-                                .text(function (d) { return _this.settings.dataDisplay.objectif_text + " " + d.toLocaleString(); })
-                                .attr('x', objectif_position)
-                                .attr("y", this.settings.dataDisplay.bar_height + svg_bottom_height - 4)
-                                .style("fill", this.settings.dataDisplay.objectif_color);
-                            if (this.settings.dataOption.prctMode) {
-                                this.right_container.className = "none";
-                                this.percent_text.textContent = "";
-                                this.objectif_text.text(this.objectif_text.text() + "%");
-                                this.value_text.textContent += "%";
-                            }
+                        if (objectif_value < value) {
+                            value_position = front_total_width;
+                            objectif_position = objectif_value / value * front_total_width;
                         }
                         else {
-                            this.data.front_rectangle.attr("width", "0");
-                            this.zero_text.classed("none", true);
-                            this.objectif_rectangle.classed("none", true);
-                            this.right_container.className = "none";
-                            this.objectif_text.text("");
-                            this.objectif_triangle.classed("none", true);
-                            this.percent_text.textContent = "";
+                            value_position = value / objectif_value * front_total_width;
+                            objectif_position = front_total_width;
                         }
-                        this.ptpassage_rectangle.classed('none', true);
                         var ptpassage_position = pt_passage_value / objectif_value * objectif_position;
-                        if (this.settings.dataOption.ptPassage && pt_passage_value) {
-                            this.data.container_bottom.className = "container_bottom";
-                            this.data.ptpassage_legend.textContent = this.settings.dataDisplay.ptpassage_text;
-                            this.data.ptpassage_value.textContent = pt_passage_value.toLocaleString();
-                            if (ptpassage_position) {
-                                this.ptpassage_rectangle.classed('none', false);
-                                this.ptpassage_rectangle.data([ptpassage_position])
-                                    .attr('y2', this.settings.dataDisplay.bar_height + svg_bottom_height)
-                                    .attr("x1", function (d) { return d; })
-                                    .attr("x2", function (d) { return d; })
-                                    .attr("stroke", this.settings.dataDisplay.ptpassage_color);
-                                var ptpassage_container_position = ptpassage_position - 150 / 2;
-                                ptpassage_container_position = ptpassage_container_position < 0 ? 0 : ptpassage_container_position;
-                                ptpassage_container_position = ptpassage_container_position > gwidth - 150 / 2 ? gwidth - 150 : ptpassage_container_position;
-                                this.data.ptpassage_container.setAttribute("style", "margin-left: " + ptpassage_container_position + "px;color:" + this.settings.dataDisplay.ptpassage_color);
+                        var vm = [{
+                                id: "current_value_libelle",
+                                visible: !!this.settings.dataDisplay.realisation_text,
+                                value: this.settings.dataDisplay.realisation_text
+                            },
+                            {
+                                id: "current_value",
+                                visible: !!value,
+                                value: function () {
+                                    if (value) {
+                                        return (+value).toLocaleString();
+                                    }
+                                },
+                            },
+                            {
+                                id: "percent_value",
+                                visible: !!prct_measure,
+                                value: function () {
+                                    if (prct_measure) {
+                                        return ((+prct_measure).toFixed(0)).toLocaleString() + "%";
+                                    }
+                                },
+                            },
+                            {
+                                id: "reste_legend",
+                                visible: !!this.settings.dataDisplay.resteafaire_text && !!todo_measure,
+                                value: this.settings.dataDisplay.resteafaire_text
+                            },
+                            {
+                                id: "reste_value",
+                                visible: !!todo_measure,
+                                value: function () {
+                                    if (todo_measure) {
+                                        return (+todo_measure).toLocaleString();
+                                    }
+                                },
+                            },
+                            {
+                                id: "svg",
+                                attr: {
+                                    width: gwidth,
+                                    height: this.settings.dataDisplay.bar_height + svg_bottom_height
+                                }
+                            },
+                            {
+                                id: "back_rectangle",
+                                attr: {
+                                    width: gwidth,
+                                    height: this.settings.dataDisplay.bar_height,
+                                    fill: this.settings.dataDisplay.backColor
+                                }
+                            },
+                            {
+                                id: "front_rectangle",
+                                attr: {
+                                    width: value_position,
+                                    height: this.settings.dataDisplay.bar_height,
+                                    fill: this.settings.dataDisplay.fill
+                                }
+                            },
+                            {
+                                id: "zero_text",
+                                visible: objectif_position > 15,
+                                attr: {
+                                    y: this.settings.dataDisplay.bar_height + 16
+                                }
+                            },
+                            {
+                                id: "objectif_rectangle",
+                                visible: !!objectif_value,
+                                attr: {
+                                    x1: objectif_position,
+                                    x2: objectif_position,
+                                    y2: this.settings.dataDisplay.bar_height,
+                                    stroke: this.settings.dataDisplay.objectif_color
+                                }
+                            },
+                            {
+                                id: "objectif_triangle",
+                                visible: !!objectif_value,
+                                attr: {
+                                    transform: function () {
+                                        return "translate(" + objectif_position + "," + (_settings.dataDisplay.bar_height + 2) + ")";
+                                    },
+                                    fill: this.settings.dataDisplay.objectif_color
+                                }
+                            },
+                            {
+                                id: "objectif_text",
+                                visible: !!objectif_value,
+                                value: function () {
+                                    if (objectif_value) {
+                                        return _settings.dataDisplay.objectif_text + " " + objectif_value.toLocaleString();
+                                    }
+                                },
+                                attr: {
+                                    "text-anchor": objectif_position < 100 ? "right" : "middle",
+                                    fill: this.settings.dataDisplay.objectif_color,
+                                    x: objectif_position,
+                                    y: this.settings.dataDisplay.bar_height + svg_bottom_height - 4
+                                }
+                            },
+                            {
+                                id: "ptpassage_rectangle",
+                                visible: this.settings.dataOption.ptPassage && pt_passage_value,
+                                attr: {
+                                    y2: this.settings.dataDisplay.bar_height + svg_bottom_height,
+                                    x1: ptpassage_position,
+                                    x2: ptpassage_position,
+                                    stroke: this.settings.dataDisplay.ptpassage_color
+                                }
+                            },
+                            {
+                                id: "ptpassage_value",
+                                visible: this.settings.dataOption.ptPassage && pt_passage_value,
+                                value: function () {
+                                    if (pt_passage_value) {
+                                        return pt_passage_value.toLocaleString();
+                                    }
+                                }
+                            },
+                            {
+                                id: "ptpassage_legend",
+                                visible: this.settings.dataOption.ptPassage && pt_passage_value,
+                                value: this.settings.dataDisplay.ptpassage_text
+                            },
+                            {
+                                id: "ptpassage_container",
+                                style: {
+                                    color: this.settings.dataDisplay.ptpassage_color,
+                                    "margin-left": function () {
+                                        var ptpassage_container_position = ptpassage_position - 150 / 2;
+                                        ptpassage_container_position = ptpassage_container_position < 0 ? 0 : ptpassage_container_position;
+                                        ptpassage_container_position = ptpassage_container_position > gwidth - 150 / 2 ? gwidth - 150 : ptpassage_container_position;
+                                        return ptpassage_container_position + "px";
+                                    }
+                                }
                             }
-                        }
-                        else {
-                            this.data.container_bottom.className = "none";
-                        }
+                        ];
+                        this.engine.update(vm);
+                        // const getvalue = (item, name) => {
+                        //     return item[name] && typeof (item[name]) === "function" ? item[name]() : item[name];
+                        // }
+                        // vm.forEach(item => {
+                        //     const el = <HTMLElement>this.data[item.id];
+                        //     let visible = false;
+                        //     if (item["visible"] !== undefined) {
+                        //         el.style.visibility = getvalue(item, "visible") ? "visible" : "collapse";
+                        //         visible = true;
+                        //     } else {
+                        //         visible = true;
+                        //     }
+                        //     if (visible) {
+                        //         if (item["value"] !== undefined) {
+                        //             const value = getvalue(item, "value");
+                        //             el.innerHTML = value ? String(value) : "";
+                        //         }
+                        //         if (item["attr"] !== undefined) {
+                        //             for (var attr_name in item["attr"]) {
+                        //                 const v = getvalue(item["attr"], attr_name);
+                        //                 if (getvalue(item["attr"], attr_name)) {
+                        //                     el.setAttribute(attr_name, v);
+                        //                 } else {
+                        //                     el.removeAttribute(attr_name);
+                        //                 }
+                        //             }
+                        //         }
+                        //         if (item["style"] !== undefined) {
+                        //             for (var style_name in item["style"]) {
+                        //                 const v = getvalue(item["style"], style_name);
+                        //                 el.style[style_name] = v ? v : "";
+                        //             }
+                        //         }
+                        //     }
+                        // });
                     };
                     Visual.parseSettings = function (dataView) {
                         return pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.VisualSettings.parse(dataView);
