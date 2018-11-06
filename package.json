@@ -7,8 +7,6 @@
     "url": "https://github.com/payns75/pbi_flatprogress.git"
   },
   "dependencies": {
-    "@types/d3": "4.13.0",
-    "d3": "4.13.0",
     "powerbi-visuals-utils-dataviewutils": "1.2.0"
   }
 }

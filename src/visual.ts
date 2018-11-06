@@ -1,98 +1,15 @@
 module powerbi.extensibility.visual {
     "use strict";
 
-    export class DomManipulation {
-        private data: any = {};
-
-        constructor(public element: HTMLElement){
-            const nodes = element.querySelectorAll("*");
-
-            for (let i = 0; i < nodes.length; i++) {
-                if (nodes[i].id) {
-                    this.data[nodes[i].id] = nodes[i];
-                }
-            }
-        }
-
-        private getvalue = (item, name) => {
-            return item[name] && typeof (item[name]) === "function" ? item[name]() : item[name];
-        }
-
-        public update(vm){
-            vm.forEach(item => {
-                const el = <HTMLElement>this.data[item.id];
-                let visible = false;
-
-                if (item["visible"] !== undefined) {
-                    el.style.visibility = this.getvalue(item, "visible") ? "visible" : "collapse";
-                    visible = true;
-                } else {
-                    visible = true;
-                }
-
-                if (visible) {
-                    if (item["value"] !== undefined) {
-                        const value = this.getvalue(item, "value");
-                        el.innerHTML = value ? String(value) : "";
-                    }
-
-                    if (item["attr"] !== undefined) {
-                        for (var attr_name in item["attr"]) {
-                            const v = this.getvalue(item["attr"], attr_name);
-
-                            if (this.getvalue(item["attr"], attr_name)) {
-                                el.setAttribute(attr_name, v);
-                            } else {
-                                el.removeAttribute(attr_name);
-                            }
-                        }
-                    }
-
-                    if (item["style"] !== undefined) {
-                        for (var style_name in item["style"]) {
-                            const v = this.getvalue(item["style"], style_name);
-                            el.style[style_name] = v ? v : "";
-                        }
-                    }
-                }
-            });
-        }
-    }
-
     export class Visual implements IVisual {
         private visual_top: HTMLDivElement;
-        // private svg: d3.Selection<d3.BaseType, {}, null, undefined>;
         private settings: VisualSettings;
-        // private gcontainer: d3.Selection<d3.BaseType, {}, null, undefined>;
-        // private back_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
-        // private back_rectangle: HTMLElement;
-        // private front_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
-        // private objectif_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
-        // private objectif_triangle: d3.Selection<d3.BaseType, {}, d3.BaseType, {}>;
-        // private objectif_text: d3.Selection<d3.BaseType, string, d3.BaseType, {}>;
-        // private zero_text: d3.Selection<d3.BaseType, {}, d3.BaseType, {}>;
-        // private right_container: HTMLElement;
-        // private value_text: Text;
-        // private value_text_libelle: Text;
-        // private percent_text: Text;
-        // private reste_text: Text;
-        // private reste_libelle: Text;
-        /*  private bottom_container: HTMLElement;
-         private ptpassage_container: HTMLElement;
-         private ptpassage_text: Text;
-         private ptpassage_libelle: Text; */
-        // private ptpassage_rectangle: d3.Selection<d3.BaseType, number, d3.BaseType, {}>;
-
-        // private data: any = {};
-        engine: DomManipulation;
+        private engine: DomEngine;
 
         constructor(options: VisualConstructorOptions) {
             this.visual_top = document.createElement("div");
             this.visual_top.className = "visual_top";
             options.element.appendChild(this.visual_top);
-
-            // const infos_container: HTMLElement = document.createElement("div");
-            // infos_container.className = "container";
 
             const infos_container_html = `
                 <div class="container">
@@ -124,82 +41,7 @@ module powerbi.extensibility.visual {
             `;
 
             this.visual_top.innerHTML = infos_container_html;
-            this.engine = new DomManipulation(this.visual_top);
-            
-
-            // this.value_text_libelle = document.getElementById("current_value_libelle").appendChild(document.createTextNode(""));
-            // this.value_text = document.getElementById("current_value").appendChild(document.createTextNode(""));
-            // this.percent_text = document.getElementById("percent_value").appendChild(document.createTextNode(""));
-            // this.reste_text = document.getElementById("reste_value").appendChild(document.createTextNode(""));
-            // this.reste_libelle = document.getElementById("reste_legend").appendChild(document.createTextNode(""));
-            // this.right_container = document.getElementById("right_container");
-
-            /* this.bottom_container = document.getElementById("container_bottom");
-            this.ptpassage_container = document.getElementById("ptpassage_container");
-            this.ptpassage_text = document.getElementById("ptpassage_value").appendChild(document.createTextNode(""));
-            this.ptpassage_libelle = document.getElementById("ptpassage_legend").appendChild(document.createTextNode("")); */
-
-            // this.back_rectangle = document.getElementById("back_rectangle");
-
-            // this.svg = d3.select(document.getElementById("svg"));
-            // this.gcontainer = this.svg.append('g').classed('percenter', true);
-
-            // this.back_rectangle = this.gcontainer
-            //     .append('g')
-            //     .selectAll('rect')
-            //     .data([this.visual_top.offsetWidth])
-            //     .enter()
-            //     .append("rect");
-
-            /*     this.front_rectangle = this.gcontainer
-                    .append('g')
-                    .selectAll('rect')
-                    .data([0])
-                    .enter()
-                    .append("rect"); */
-
-            // this.objectif_rectangle = this.gcontainer
-            //     .append('g')
-            //     .selectAll('line')
-            //     .data([0])
-            //     .enter()
-            //     .append("line")
-            //     .attr('y1', 0)
-            //     .style("stroke-width", "1")
-            //     .attr("width", 3)
-            //     .classed("none", true);
-
-            // this.objectif_triangle = this.gcontainer
-            //     .append('g')
-            //     .append('path')
-            //     .attr("d", d3.symbol().type(d3.symbolTriangle).size(100))
-            //     .attr("transform", function (d) { return "translate(" + 10 + "," + 10 + ")"; })
-            //     .classed("none", true);
-
-            // this.objectif_text = this.gcontainer
-            //     .append('g')
-            //     .selectAll('text')
-            //     .data([''])
-            //     .enter()
-            //     .append('text');
-
-            // this.zero_text = this.gcontainer
-            //     .append('g')
-            //     .append('text')
-            //     .text("0")
-            //     .attr('text-anchor', 'right')
-            //     .classed("none", true);
-
-            // this.ptpassage_rectangle = this.gcontainer
-            //     .append('g')
-            //     .selectAll('line')
-            //     .data([0])
-            //     .enter()
-            //     .append("line")
-            //     .attr('y1', 0)
-            //     .style("stroke-width", "3")
-            //     .style("stroke-dasharray", "5,5")
-            //     .classed("none", true);
+            this.engine = new DomEngine(this.visual_top);
         }
 
         public update(options: VisualUpdateOptions) {
@@ -371,48 +213,6 @@ module powerbi.extensibility.visual {
             ];
 
             this.engine.update(vm);
-
-            // const getvalue = (item, name) => {
-            //     return item[name] && typeof (item[name]) === "function" ? item[name]() : item[name];
-            // }
-
-            // vm.forEach(item => {
-            //     const el = <HTMLElement>this.data[item.id];
-            //     let visible = false;
-
-            //     if (item["visible"] !== undefined) {
-            //         el.style.visibility = getvalue(item, "visible") ? "visible" : "collapse";
-            //         visible = true;
-            //     } else {
-            //         visible = true;
-            //     }
-
-            //     if (visible) {
-            //         if (item["value"] !== undefined) {
-            //             const value = getvalue(item, "value");
-            //             el.innerHTML = value ? String(value) : "";
-            //         }
-
-            //         if (item["attr"] !== undefined) {
-            //             for (var attr_name in item["attr"]) {
-            //                 const v = getvalue(item["attr"], attr_name);
-
-            //                 if (getvalue(item["attr"], attr_name)) {
-            //                     el.setAttribute(attr_name, v);
-            //                 } else {
-            //                     el.removeAttribute(attr_name);
-            //                 }
-            //             }
-            //         }
-
-            //         if (item["style"] !== undefined) {
-            //             for (var style_name in item["style"]) {
-            //                 const v = getvalue(item["style"], style_name);
-            //                 el.style[style_name] = v ? v : "";
-            //             }
-            //         }
-            //     }
-            // });
         }
 
         private static parseSettings(dataView: DataView): VisualSettings {
