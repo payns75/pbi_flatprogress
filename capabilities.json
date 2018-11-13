@@ -177,6 +177,18 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "prctMultiPlicateur": {
+                    "displayName": "Multi. %",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "calculAuto": {
+                    "displayName": "Calcul auto",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         }

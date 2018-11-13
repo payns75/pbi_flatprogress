@@ -23,5 +23,7 @@ module powerbi.extensibility.visual {
   export class dataOptionSettings {
     public ptPassage: boolean = true;
     public prctMode: boolean = false;
+    public prctMultiPlicateur: boolean = false;
+    public calculAuto: boolean = false;
   }
 }

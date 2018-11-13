@@ -23,5 +23,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
   export class dataOptionSettings {
     public ptPassage: boolean = true;
     public prctMode: boolean = false;
+    public prctMultiPlicateur: boolean = false;
+    public calculAuto: boolean = false;
   }
 }

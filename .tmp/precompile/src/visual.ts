@@ -45,6 +45,9 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
         }
 
         public update(options: VisualUpdateOptions) {
+            // TEST : objectif_value != 0
+            //  
+
             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
             this.visual_top.setAttribute("style", `height:${options.viewport.height}px;margin: 0 ${this.settings.dataDisplay.horizontal_margin}px`);
             const gwidth = this.visual_top.clientWidth;
@@ -54,8 +57,19 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             const value = Visual.getvalue(options.dataViews[0].categorical, "measure");
             const objectif_value = Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
             const pt_passage_value = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
-            const todo_measure = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
-            const prct_measure = Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+            let todo_measure = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
+            let prct_measure = +Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+
+            if (!prct_measure && objectif_value) {
+                prct_measure = value / objectif_value * 100;
+            }
+
+            if (!todo_measure && todo_measure !== 0) {
+                const tmp = objectif_value - value;
+                todo_measure = tmp < 0 ? 0 : tmp;
+            }
+
+            console.log(todo_measure);
 
             const front_total_width = gwidth - gwidth * 10 / 100;
             let value_position = 0;
@@ -65,7 +79,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 value_position = front_total_width;
                 objectif_position = objectif_value / value * front_total_width;
             } else {
-                value_position = value / objectif_value * front_total_width;
+                value_position = prct_measure / 100 * front_total_width;
                 objectif_position = front_total_width;
             }
 
@@ -96,14 +110,14 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
             },
             {
                 id: "reste_legend",
-                visible: !!this.settings.dataDisplay.resteafaire_text && !!todo_measure,
+                visible: !!this.settings.dataDisplay.resteafaire_text && (!!todo_measure || todo_measure === 0),
                 value: this.settings.dataDisplay.resteafaire_text
             },
             {
                 id: "reste_value",
-                visible: !!todo_measure,
+                visible: !!todo_measure || todo_measure === 0,
                 value: function () {
-                    if (todo_measure) {
+                    if (todo_measure || todo_measure === 0) {
                         return (+todo_measure).toLocaleString();
                     }
                 },

@@ -553,6 +553,8 @@ var powerbi;
                     function dataOptionSettings() {
                         this.ptPassage = true;
                         this.prctMode = false;
+                        this.prctMultiPlicateur = false;
+                        this.calculAuto = false;
                     }
                     return dataOptionSettings;
                 }());
@@ -648,6 +650,8 @@ var powerbi;
                         this.engine = new pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.DomEngine(this.visual_top);
                     }
                     Visual.prototype.update = function (options) {
+                        // TEST : objectif_value != 0
+                        //  
                         this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
                         this.visual_top.setAttribute("style", "height:" + options.viewport.height + "px;margin: 0 " + this.settings.dataDisplay.horizontal_margin + "px");
                         var gwidth = this.visual_top.clientWidth;
@@ -657,7 +661,15 @@ var powerbi;
                         var objectif_value = Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
                         var pt_passage_value = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
                         var todo_measure = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
-                        var prct_measure = Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+                        var prct_measure = +Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+                        if (!prct_measure && objectif_value) {
+                            prct_measure = value / objectif_value * 100;
+                        }
+                        if (!todo_measure && todo_measure !== 0) {
+                            var tmp = objectif_value - value;
+                            todo_measure = tmp < 0 ? 0 : tmp;
+                        }
+                        console.log(todo_measure);
                         var front_total_width = gwidth - gwidth * 10 / 100;
                         var value_position = 0;
                         var objectif_position = 0;
@@ -666,7 +678,7 @@ var powerbi;
                             objectif_position = objectif_value / value * front_total_width;
                         }
                         else {
-                            value_position = value / objectif_value * front_total_width;
+                            value_position = prct_measure / 100 * front_total_width;
                             objectif_position = front_total_width;
                         }
                         var ptpassage_position = pt_passage_value / objectif_value * objectif_position;
@@ -695,14 +707,14 @@ var powerbi;
                             },
                             {
                                 id: "reste_legend",
-                                visible: !!this.settings.dataDisplay.resteafaire_text && !!todo_measure,
+                                visible: !!this.settings.dataDisplay.resteafaire_text && (!!todo_measure || todo_measure === 0),
                                 value: this.settings.dataDisplay.resteafaire_text
                             },
                             {
                                 id: "reste_value",
-                                visible: !!todo_measure,
+                                visible: !!todo_measure || todo_measure === 0,
                                 value: function () {
-                                    if (todo_measure) {
+                                    if (todo_measure || todo_measure === 0) {
                                         return (+todo_measure).toLocaleString();
                                     }
                                 },
