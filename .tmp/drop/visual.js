@@ -652,176 +652,185 @@ var powerbi;
                     Visual.prototype.update = function (options) {
                         // TEST : objectif_value != 0
                         //  
-                        this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-                        this.visual_top.setAttribute("style", "height:" + options.viewport.height + "px;margin: 0 " + this.settings.dataDisplay.horizontal_margin + "px");
-                        var gwidth = this.visual_top.clientWidth;
-                        var svg_bottom_height = 36;
-                        var _settings = this.settings;
-                        var value = Visual.getvalue(options.dataViews[0].categorical, "measure");
-                        var objectif_value = Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
-                        var pt_passage_value = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
-                        var todo_measure = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
-                        var prct_measure = +Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
-                        if (!prct_measure && objectif_value) {
-                            prct_measure = value / objectif_value * 100;
-                        }
-                        if (!todo_measure && todo_measure !== 0) {
-                            var tmp = objectif_value - value;
-                            todo_measure = tmp < 0 ? 0 : tmp;
-                        }
-                        console.log(todo_measure);
-                        var front_total_width = gwidth - gwidth * 10 / 100;
-                        var value_position = 0;
-                        var objectif_position = 0;
-                        if (objectif_value < value) {
-                            value_position = front_total_width;
-                            objectif_position = objectif_value / value * front_total_width;
-                        }
-                        else {
-                            value_position = prct_measure / 100 * front_total_width;
-                            objectif_position = front_total_width;
-                        }
-                        var ptpassage_position = pt_passage_value / objectif_value * objectif_position;
-                        var vm = [{
-                                id: "current_value_libelle",
-                                visible: !!this.settings.dataDisplay.realisation_text,
-                                value: this.settings.dataDisplay.realisation_text
-                            },
-                            {
-                                id: "current_value",
-                                visible: !!value,
-                                value: function () {
-                                    if (value) {
-                                        return (+value).toLocaleString();
-                                    }
-                                },
-                            },
-                            {
-                                id: "percent_value",
-                                visible: !!prct_measure,
-                                value: function () {
-                                    if (prct_measure) {
-                                        return ((+prct_measure).toFixed(0)).toLocaleString() + "%";
-                                    }
-                                },
-                            },
-                            {
-                                id: "reste_legend",
-                                visible: !!this.settings.dataDisplay.resteafaire_text && (!!todo_measure || todo_measure === 0),
-                                value: this.settings.dataDisplay.resteafaire_text
-                            },
-                            {
-                                id: "reste_value",
-                                visible: !!todo_measure || todo_measure === 0,
-                                value: function () {
-                                    if (todo_measure || todo_measure === 0) {
-                                        return (+todo_measure).toLocaleString();
-                                    }
-                                },
-                            },
-                            {
-                                id: "svg",
-                                attr: {
-                                    width: gwidth,
-                                    height: this.settings.dataDisplay.bar_height + svg_bottom_height
+                        try {
+                            this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+                            this.visual_top.setAttribute("style", "height:" + options.viewport.height + "px;margin: 0 " + this.settings.dataDisplay.horizontal_margin + "px");
+                            var gwidth_1 = this.visual_top.clientWidth;
+                            var svg_bottom_height = 36;
+                            var _settings_1 = this.settings;
+                            var value_1 = Visual.getvalue(options.dataViews[0].categorical, "measure");
+                            var objectif_value_1 = Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
+                            var pt_passage_value_1 = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
+                            var todo_measure_1 = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
+                            var prct_measure_1 = +Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+                            if (this.settings.dataOption.calculAuto) {
+                                if (objectif_value_1) {
+                                    prct_measure_1 = value_1 / objectif_value_1 * 100;
                                 }
-                            },
-                            {
-                                id: "back_rectangle",
-                                attr: {
-                                    width: gwidth,
-                                    height: this.settings.dataDisplay.bar_height,
-                                    fill: this.settings.dataDisplay.backColor
-                                }
-                            },
-                            {
-                                id: "front_rectangle",
-                                attr: {
-                                    width: value_position,
-                                    height: this.settings.dataDisplay.bar_height,
-                                    fill: this.settings.dataDisplay.fill
-                                }
-                            },
-                            {
-                                id: "zero_text",
-                                visible: objectif_position > 15,
-                                attr: {
-                                    y: this.settings.dataDisplay.bar_height + 16
-                                }
-                            },
-                            {
-                                id: "objectif_rectangle",
-                                visible: !!objectif_value,
-                                attr: {
-                                    x1: objectif_position,
-                                    x2: objectif_position,
-                                    y2: this.settings.dataDisplay.bar_height,
-                                    stroke: this.settings.dataDisplay.objectif_color
-                                }
-                            },
-                            {
-                                id: "objectif_triangle",
-                                visible: !!objectif_value,
-                                attr: {
-                                    transform: function () {
-                                        return "translate(" + objectif_position + "," + (_settings.dataDisplay.bar_height + 2) + ")";
-                                    },
-                                    fill: this.settings.dataDisplay.objectif_color
-                                }
-                            },
-                            {
-                                id: "objectif_text",
-                                visible: !!objectif_value,
-                                value: function () {
-                                    if (objectif_value) {
-                                        return _settings.dataDisplay.objectif_text + " " + objectif_value.toLocaleString();
-                                    }
-                                },
-                                attr: {
-                                    "text-anchor": objectif_position < 100 ? "right" : "middle",
-                                    fill: this.settings.dataDisplay.objectif_color,
-                                    x: objectif_position,
-                                    y: this.settings.dataDisplay.bar_height + svg_bottom_height - 4
-                                }
-                            },
-                            {
-                                id: "ptpassage_rectangle",
-                                visible: this.settings.dataOption.ptPassage && pt_passage_value,
-                                attr: {
-                                    y2: this.settings.dataDisplay.bar_height + svg_bottom_height,
-                                    x1: ptpassage_position,
-                                    x2: ptpassage_position,
-                                    stroke: this.settings.dataDisplay.ptpassage_color
-                                }
-                            },
-                            {
-                                id: "ptpassage_value",
-                                visible: this.settings.dataOption.ptPassage && pt_passage_value,
-                                value: function () {
-                                    if (pt_passage_value) {
-                                        return pt_passage_value.toLocaleString();
-                                    }
-                                }
-                            },
-                            {
-                                id: "ptpassage_legend",
-                                visible: this.settings.dataOption.ptPassage && pt_passage_value,
-                                value: this.settings.dataDisplay.ptpassage_text
-                            },
-                            {
-                                id: "ptpassage_container",
-                                style: {
-                                    color: this.settings.dataDisplay.ptpassage_color,
-                                    "margin-left": function () {
-                                        var ptpassage_container_position = ptpassage_position - 150 / 2;
-                                        ptpassage_container_position = ptpassage_container_position < 0 ? 0 : ptpassage_container_position;
-                                        ptpassage_container_position = ptpassage_container_position > gwidth - 150 / 2 ? gwidth - 150 : ptpassage_container_position;
-                                        return ptpassage_container_position + "px";
-                                    }
+                                var tmp = objectif_value_1 - value_1;
+                                todo_measure_1 = tmp < 0 ? 0 : tmp;
+                            }
+                            else {
+                                if (prct_measure_1 && this.settings.dataOption.prctMultiPlicateur) {
+                                    prct_measure_1 *= 100;
                                 }
                             }
-                        ];
-                        this.engine.update(vm);
+                            var front_total_width = gwidth_1 - gwidth_1 * 10 / 100;
+                            var value_position = 0;
+                            var objectif_position_1 = 0;
+                            if (objectif_value_1 < value_1) {
+                                value_position = front_total_width;
+                                objectif_position_1 = objectif_value_1 / value_1 * front_total_width;
+                            }
+                            else {
+                                value_position = prct_measure_1 / 100 * front_total_width;
+                                objectif_position_1 = front_total_width;
+                            }
+                            var ptpassage_position_1 = pt_passage_value_1 / objectif_value_1 * objectif_position_1;
+                            var vm = [{
+                                    id: "current_value_libelle",
+                                    visible: !!this.settings.dataDisplay.realisation_text,
+                                    value: this.settings.dataDisplay.realisation_text
+                                },
+                                {
+                                    id: "current_value",
+                                    visible: !!value_1,
+                                    value: function () {
+                                        if (value_1) {
+                                            return (+value_1).toLocaleString();
+                                        }
+                                    },
+                                },
+                                {
+                                    id: "percent_value",
+                                    visible: !!prct_measure_1,
+                                    value: function () {
+                                        if (prct_measure_1) {
+                                            return ((+prct_measure_1).toFixed(0)).toLocaleString() + "%";
+                                        }
+                                    },
+                                },
+                                {
+                                    id: "reste_legend",
+                                    visible: !!this.settings.dataDisplay.resteafaire_text && (!!todo_measure_1 || todo_measure_1 === 0),
+                                    value: this.settings.dataDisplay.resteafaire_text
+                                },
+                                {
+                                    id: "reste_value",
+                                    visible: !!todo_measure_1 || todo_measure_1 === 0,
+                                    value: function () {
+                                        if (todo_measure_1 || todo_measure_1 === 0) {
+                                            return (+todo_measure_1).toLocaleString();
+                                        }
+                                    },
+                                },
+                                {
+                                    id: "svg",
+                                    attr: {
+                                        width: gwidth_1,
+                                        height: this.settings.dataDisplay.bar_height + svg_bottom_height
+                                    }
+                                },
+                                {
+                                    id: "back_rectangle",
+                                    attr: {
+                                        width: gwidth_1,
+                                        height: this.settings.dataDisplay.bar_height,
+                                        fill: this.settings.dataDisplay.backColor
+                                    }
+                                },
+                                {
+                                    id: "front_rectangle",
+                                    attr: {
+                                        width: value_position,
+                                        height: this.settings.dataDisplay.bar_height,
+                                        fill: this.settings.dataDisplay.fill
+                                    }
+                                },
+                                {
+                                    id: "zero_text",
+                                    visible: objectif_position_1 > 15,
+                                    attr: {
+                                        y: this.settings.dataDisplay.bar_height + 16
+                                    }
+                                },
+                                {
+                                    id: "objectif_rectangle",
+                                    visible: !!objectif_value_1,
+                                    attr: {
+                                        x1: objectif_position_1,
+                                        x2: objectif_position_1,
+                                        y2: this.settings.dataDisplay.bar_height,
+                                        stroke: this.settings.dataDisplay.objectif_color
+                                    }
+                                },
+                                {
+                                    id: "objectif_triangle",
+                                    visible: !!objectif_value_1,
+                                    attr: {
+                                        transform: function () {
+                                            return "translate(" + objectif_position_1 + "," + (_settings_1.dataDisplay.bar_height + 2) + ")";
+                                        },
+                                        fill: this.settings.dataDisplay.objectif_color
+                                    }
+                                },
+                                {
+                                    id: "objectif_text",
+                                    visible: !!objectif_value_1,
+                                    value: function () {
+                                        if (objectif_value_1) {
+                                            return _settings_1.dataDisplay.objectif_text + " " + objectif_value_1.toLocaleString();
+                                        }
+                                    },
+                                    attr: {
+                                        "text-anchor": objectif_position_1 < 100 ? "right" : "middle",
+                                        fill: this.settings.dataDisplay.objectif_color,
+                                        x: objectif_position_1,
+                                        y: this.settings.dataDisplay.bar_height + svg_bottom_height - 4
+                                    }
+                                },
+                                {
+                                    id: "ptpassage_rectangle",
+                                    visible: this.settings.dataOption.ptPassage && pt_passage_value_1,
+                                    attr: {
+                                        y2: this.settings.dataDisplay.bar_height + svg_bottom_height,
+                                        x1: ptpassage_position_1,
+                                        x2: ptpassage_position_1,
+                                        stroke: this.settings.dataDisplay.ptpassage_color
+                                    }
+                                },
+                                {
+                                    id: "ptpassage_value",
+                                    visible: this.settings.dataOption.ptPassage && pt_passage_value_1,
+                                    value: function () {
+                                        if (pt_passage_value_1) {
+                                            return pt_passage_value_1.toLocaleString();
+                                        }
+                                    }
+                                },
+                                {
+                                    id: "ptpassage_legend",
+                                    visible: this.settings.dataOption.ptPassage && pt_passage_value_1,
+                                    value: this.settings.dataDisplay.ptpassage_text
+                                },
+                                {
+                                    id: "ptpassage_container",
+                                    style: {
+                                        color: this.settings.dataDisplay.ptpassage_color,
+                                        "margin-left": function () {
+                                            var ptpassage_container_position = ptpassage_position_1 - 150 / 2;
+                                            ptpassage_container_position = ptpassage_container_position < 0 ? 0 : ptpassage_container_position;
+                                            ptpassage_container_position = ptpassage_container_position > gwidth_1 - 150 / 2 ? gwidth_1 - 150 : ptpassage_container_position;
+                                            return ptpassage_container_position + "px";
+                                        }
+                                    }
+                                }
+                            ];
+                            this.engine.update(vm);
+                        }
+                        catch (ex) {
+                            console.error(ex);
+                        }
                     };
                     Visual.parseSettings = function (dataView) {
                         return pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.VisualSettings.parse(dataView);
@@ -848,8 +857,8 @@ var powerbi;
     (function (visuals) {
         var plugins;
         (function (plugins) {
-            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = {
-                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5',
+            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG = {
+                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG',
                 displayName: 'flatprogress',
                 class: 'Visual',
                 version: '1.0.0',
