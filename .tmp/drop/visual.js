@@ -721,18 +721,17 @@ var powerbi;
                                     id: "reste_legend",
                                     visible: !!this.settings.dataDisplay.resteafaire_text
                                         && (!!todo_measure_1 || todo_measure_1 === 0)
-                                        && this.settings.dataOption.rstAFaire
-                                        && !this.settings.dataOption.prctMode,
+                                        && this.settings.dataOption.rstAFaire,
                                     value: this.settings.dataDisplay.resteafaire_text
                                 },
                                 {
                                     id: "reste_value",
                                     visible: (!!todo_measure_1 || todo_measure_1 === 0)
-                                        && this.settings.dataOption.rstAFaire
-                                        && !this.settings.dataOption.prctMode,
+                                        && this.settings.dataOption.rstAFaire,
                                     value: function () {
                                         if (todo_measure_1 || todo_measure_1 === 0) {
-                                            return (+todo_measure_1).toLocaleString();
+                                            var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? todo_measure_1 * 100 : +todo_measure_1;
+                                            return (tmp).toLocaleString() + prctsuffix_1;
                                         }
                                     },
                                 },
@@ -838,8 +837,7 @@ var powerbi;
                                             return ptpassage_container_position + "px";
                                         }
                                     }
-                                }
-                            ];
+                                }];
                             this.engine.update(vm);
                         }
                         catch (ex) {

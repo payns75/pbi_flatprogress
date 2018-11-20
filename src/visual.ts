@@ -100,7 +100,7 @@ module powerbi.extensibility.visual {
                 {
                     id: "current_value",
                     visible: !!value,
-                    value: function () {
+                    value: () => {
                         if (value) {
                             const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? value * 100 : +value;
                             return (tmp).toLocaleString() + prctsuffix;
@@ -110,7 +110,7 @@ module powerbi.extensibility.visual {
                 {
                     id: "percent_value",
                     visible: !!prct_measure && !this.settings.dataOption.prctMode,
-                    value: function () {
+                    value: () => {
                         if (prct_measure) {
                             return `${((+prct_measure).toFixed(0)).toLocaleString()}%`;
                         }
@@ -120,18 +120,17 @@ module powerbi.extensibility.visual {
                     id: "reste_legend",
                     visible: !!this.settings.dataDisplay.resteafaire_text
                         && (!!todo_measure || todo_measure === 0)
-                        && this.settings.dataOption.rstAFaire
-                        && !this.settings.dataOption.prctMode,
+                        && this.settings.dataOption.rstAFaire,
                     value: this.settings.dataDisplay.resteafaire_text
                 },
                 {
                     id: "reste_value",
                     visible: (!!todo_measure || todo_measure === 0)
-                        && this.settings.dataOption.rstAFaire
-                        && !this.settings.dataOption.prctMode,
-                    value: function () {
+                        && this.settings.dataOption.rstAFaire,
+                    value: () => {
                         if (todo_measure || todo_measure === 0) {
-                            return (+todo_measure).toLocaleString();
+                            const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? todo_measure * 100 : +todo_measure;
+                            return (tmp).toLocaleString() + prctsuffix;
                         }
                     },
                 },
@@ -179,7 +178,7 @@ module powerbi.extensibility.visual {
                     id: "objectif_triangle",
                     visible: !!objectif_value,
                     attr: {
-                        transform: function () {
+                        transform: () => {
                             return `translate(${objectif_position},${(_settings.dataDisplay.bar_height + 2)})`;
                         },
                         fill: this.settings.dataDisplay.objectif_color
@@ -188,7 +187,7 @@ module powerbi.extensibility.visual {
                 {
                     id: "objectif_text",
                     visible: !!objectif_value,
-                    value: function () {
+                    value: () => {
                         if (objectif_value) {
                             const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? objectif_value * 100 : objectif_value;
                             return `${_settings.dataDisplay.objectif_text} ${tmp.toLocaleString()}${prctsuffix}`;
@@ -214,7 +213,7 @@ module powerbi.extensibility.visual {
                 {
                     id: "ptpassage_value",
                     visible: this.settings.dataOption.ptPassage && pt_passage_value,
-                    value: function () {
+                    value: () => {
                         if (pt_passage_value) {
                             const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? pt_passage_value * 100 : +pt_passage_value;
                             return tmp.toLocaleString() + prctsuffix;
@@ -230,7 +229,7 @@ module powerbi.extensibility.visual {
                     id: "ptpassage_container",
                     style: {
                         color: this.settings.dataDisplay.ptpassage_color,
-                        "margin-left": function () {
+                        "margin-left": () => {
                             let ptpassage_container_position = ptpassage_position - 150 / 2;
                             ptpassage_container_position = ptpassage_container_position < 0 ? 0 : ptpassage_container_position;
                             ptpassage_container_position = ptpassage_container_position > gwidth - 150 / 2 ? gwidth - 150 : ptpassage_container_position;
@@ -238,8 +237,7 @@ module powerbi.extensibility.visual {
                             return `${ptpassage_container_position}px`;
                         }
                     }
-                }
-                ];
+                }];
 
                 this.engine.update(vm);
             } catch (ex) {
