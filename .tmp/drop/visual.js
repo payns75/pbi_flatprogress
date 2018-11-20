@@ -869,8 +869,8 @@ var powerbi;
     (function (visuals) {
         var plugins;
         (function (plugins) {
-            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = {
-                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5',
+            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG = {
+                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG',
                 displayName: 'flatprogress',
                 class: 'Visual',
                 version: '1.0.0',
