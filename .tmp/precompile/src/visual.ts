@@ -7,11 +7,12 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
         private engine: DomEngine;
 
         constructor(options: VisualConstructorOptions) {
-            this.visual_top = document.createElement("div");
-            this.visual_top.className = "visual_top";
-            options.element.appendChild(this.visual_top);
+            try {
+                this.visual_top = document.createElement("div");
+                this.visual_top.className = "visual_top";
+                options.element.appendChild(this.visual_top);
 
-            const infos_container_html = `
+                const infos_container_html = `
                 <div class="container">
                     <div class="left_container">
                         <div class="current_value_container">
@@ -40,13 +41,16 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 </div>
             `;
 
-            this.visual_top.innerHTML = infos_container_html;
-            this.engine = new DomEngine(this.visual_top);
+                this.visual_top.innerHTML = infos_container_html;
+                this.engine = new DomEngine(this.visual_top);
+            }
+            catch (ex) {
+                console.error('Constructor Error', ex);
+            }
         }
 
         public update(options: VisualUpdateOptions) {
             // TEST : objectif_value != 0
-            //  
             try {
                 this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
                 this.visual_top.setAttribute("style", `height:${options.viewport.height}px;margin: 0 ${this.settings.dataDisplay.horizontal_margin}px`);
@@ -86,10 +90,11 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 }
 
                 const ptpassage_position = pt_passage_value / objectif_value * objectif_position;
+                const prctsuffix = this.settings.dataOption.prctMode ? '%' : '';
 
                 const vm = [{
                     id: "current_value_libelle",
-                    visible: !!this.settings.dataDisplay.realisation_text,
+                    visible: !!this.settings.dataDisplay.realisation_text && !!value,
                     value: this.settings.dataDisplay.realisation_text
                 },
                 {
@@ -97,13 +102,14 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     visible: !!value,
                     value: function () {
                         if (value) {
-                            return (+value).toLocaleString();
+                            const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? value * 100 : +value;
+                            return (tmp).toLocaleString() + prctsuffix;
                         }
                     },
                 },
                 {
                     id: "percent_value",
-                    visible: !!prct_measure,
+                    visible: !!prct_measure && !this.settings.dataOption.prctMode,
                     value: function () {
                         if (prct_measure) {
                             return `${((+prct_measure).toFixed(0)).toLocaleString()}%`;
@@ -112,12 +118,17 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 },
                 {
                     id: "reste_legend",
-                    visible: !!this.settings.dataDisplay.resteafaire_text && (!!todo_measure || todo_measure === 0),
+                    visible: !!this.settings.dataDisplay.resteafaire_text
+                        && (!!todo_measure || todo_measure === 0)
+                        && this.settings.dataOption.rstAFaire
+                        && !this.settings.dataOption.prctMode,
                     value: this.settings.dataDisplay.resteafaire_text
                 },
                 {
                     id: "reste_value",
-                    visible: !!todo_measure || todo_measure === 0,
+                    visible: (!!todo_measure || todo_measure === 0)
+                        && this.settings.dataOption.rstAFaire
+                        && !this.settings.dataOption.prctMode,
                     value: function () {
                         if (todo_measure || todo_measure === 0) {
                             return (+todo_measure).toLocaleString();
@@ -179,7 +190,8 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     visible: !!objectif_value,
                     value: function () {
                         if (objectif_value) {
-                            return `${_settings.dataDisplay.objectif_text} ${objectif_value.toLocaleString()}`;
+                            const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? objectif_value * 100 : objectif_value;
+                            return `${_settings.dataDisplay.objectif_text} ${tmp.toLocaleString()}${prctsuffix}`;
                         }
                     },
                     attr: {
@@ -204,7 +216,8 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     visible: this.settings.dataOption.ptPassage && pt_passage_value,
                     value: function () {
                         if (pt_passage_value) {
-                            return pt_passage_value.toLocaleString();
+                            const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? pt_passage_value * 100 : +pt_passage_value;
+                            return tmp.toLocaleString() + prctsuffix;
                         }
                     }
                 },
@@ -230,7 +243,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
 
                 this.engine.update(vm);
             } catch (ex) {
-                console.error(ex);
+                console.error('Update error', ex);
             }
         }
 

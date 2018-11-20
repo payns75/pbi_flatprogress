@@ -552,6 +552,7 @@ var powerbi;
                 var dataOptionSettings = (function () {
                     function dataOptionSettings() {
                         this.ptPassage = true;
+                        this.rstAFaire = true;
                         this.prctMode = false;
                         this.prctMultiPlicateur = false;
                         this.calculAuto = false;
@@ -642,16 +643,20 @@ var powerbi;
                 "use strict";
                 var Visual = (function () {
                     function Visual(options) {
-                        this.visual_top = document.createElement("div");
-                        this.visual_top.className = "visual_top";
-                        options.element.appendChild(this.visual_top);
-                        var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\"></text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                    <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                </div>\n            ";
-                        this.visual_top.innerHTML = infos_container_html;
-                        this.engine = new pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.DomEngine(this.visual_top);
+                        try {
+                            this.visual_top = document.createElement("div");
+                            this.visual_top.className = "visual_top";
+                            options.element.appendChild(this.visual_top);
+                            var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\"></text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                    <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                </div>\n            ";
+                            this.visual_top.innerHTML = infos_container_html;
+                            this.engine = new pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.DomEngine(this.visual_top);
+                        }
+                        catch (ex) {
+                            console.error('Constructor Error', ex);
+                        }
                     }
                     Visual.prototype.update = function (options) {
                         // TEST : objectif_value != 0
-                        //  
                         try {
                             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
                             this.visual_top.setAttribute("style", "height:" + options.viewport.height + "px;margin: 0 " + this.settings.dataDisplay.horizontal_margin + "px");
@@ -687,9 +692,10 @@ var powerbi;
                                 objectif_position_1 = front_total_width;
                             }
                             var ptpassage_position_1 = pt_passage_value_1 / objectif_value_1 * objectif_position_1;
+                            var prctsuffix_1 = this.settings.dataOption.prctMode ? '%' : '';
                             var vm = [{
                                     id: "current_value_libelle",
-                                    visible: !!this.settings.dataDisplay.realisation_text,
+                                    visible: !!this.settings.dataDisplay.realisation_text && !!value_1,
                                     value: this.settings.dataDisplay.realisation_text
                                 },
                                 {
@@ -697,13 +703,14 @@ var powerbi;
                                     visible: !!value_1,
                                     value: function () {
                                         if (value_1) {
-                                            return (+value_1).toLocaleString();
+                                            var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? value_1 * 100 : +value_1;
+                                            return (tmp).toLocaleString() + prctsuffix_1;
                                         }
                                     },
                                 },
                                 {
                                     id: "percent_value",
-                                    visible: !!prct_measure_1,
+                                    visible: !!prct_measure_1 && !this.settings.dataOption.prctMode,
                                     value: function () {
                                         if (prct_measure_1) {
                                             return ((+prct_measure_1).toFixed(0)).toLocaleString() + "%";
@@ -712,12 +719,17 @@ var powerbi;
                                 },
                                 {
                                     id: "reste_legend",
-                                    visible: !!this.settings.dataDisplay.resteafaire_text && (!!todo_measure_1 || todo_measure_1 === 0),
+                                    visible: !!this.settings.dataDisplay.resteafaire_text
+                                        && (!!todo_measure_1 || todo_measure_1 === 0)
+                                        && this.settings.dataOption.rstAFaire
+                                        && !this.settings.dataOption.prctMode,
                                     value: this.settings.dataDisplay.resteafaire_text
                                 },
                                 {
                                     id: "reste_value",
-                                    visible: !!todo_measure_1 || todo_measure_1 === 0,
+                                    visible: (!!todo_measure_1 || todo_measure_1 === 0)
+                                        && this.settings.dataOption.rstAFaire
+                                        && !this.settings.dataOption.prctMode,
                                     value: function () {
                                         if (todo_measure_1 || todo_measure_1 === 0) {
                                             return (+todo_measure_1).toLocaleString();
@@ -779,7 +791,8 @@ var powerbi;
                                     visible: !!objectif_value_1,
                                     value: function () {
                                         if (objectif_value_1) {
-                                            return _settings_1.dataDisplay.objectif_text + " " + objectif_value_1.toLocaleString();
+                                            var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? objectif_value_1 * 100 : objectif_value_1;
+                                            return _settings_1.dataDisplay.objectif_text + " " + tmp.toLocaleString() + prctsuffix_1;
                                         }
                                     },
                                     attr: {
@@ -804,7 +817,8 @@ var powerbi;
                                     visible: this.settings.dataOption.ptPassage && pt_passage_value_1,
                                     value: function () {
                                         if (pt_passage_value_1) {
-                                            return pt_passage_value_1.toLocaleString();
+                                            var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? pt_passage_value_1 * 100 : +pt_passage_value_1;
+                                            return tmp.toLocaleString() + prctsuffix_1;
                                         }
                                     }
                                 },
@@ -829,7 +843,7 @@ var powerbi;
                             this.engine.update(vm);
                         }
                         catch (ex) {
-                            console.error(ex);
+                            console.error('Update error', ex);
                         }
                     };
                     Visual.parseSettings = function (dataView) {
@@ -857,8 +871,8 @@ var powerbi;
     (function (visuals) {
         var plugins;
         (function (plugins) {
-            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG = {
-                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG',
+            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = {
+                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5',
                 displayName: 'flatprogress',
                 class: 'Visual',
                 version: '1.0.0',

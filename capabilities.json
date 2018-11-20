@@ -172,6 +172,12 @@
                         "bool": true
                     }
                 },
+                "rstAFaire": {
+                    "displayName": "Avec reste à faire",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "prctMode": {
                     "displayName": "Mode %",
                     "type": {
