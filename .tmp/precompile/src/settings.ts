@@ -13,6 +13,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
     public bar_height: number = 30;
     public horizontal_margin: number = 30;
     public realisation_text: string = "Réalisation";
+    public realisation_font_size: number = 61;
     public resteafaire_text: string = "Reste à faire";
     public ptpassage_text: string = "Point de passage";
     public ptpassage_color: string = "#9c27b0";

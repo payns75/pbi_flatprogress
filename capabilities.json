@@ -112,7 +112,13 @@
                     }
                 },
                 "horizontal_margin": {
-                    "displayName": "Y margin",
+                    "displayName": "X margin",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "realisation_font_size": {
+                    "displayName": "Réalisation Font Size",
                     "type": {
                         "numeric": true
                     }

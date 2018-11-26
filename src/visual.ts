@@ -106,6 +106,9 @@ module powerbi.extensibility.visual {
                             return (tmp).toLocaleString() + prctsuffix;
                         }
                     },
+                    style: {
+                        "fontSize": this.settings.dataDisplay.realisation_font_size + "px"
+                    }
                 },
                 {
                     id: "percent_value",

@@ -106,6 +106,9 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                             return (tmp).toLocaleString() + prctsuffix;
                         }
                     },
+                    style: {
+                        "fontSize": this.settings.dataDisplay.realisation_font_size + "px"
+                    }
                 },
                 {
                     id: "percent_value",

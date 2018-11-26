@@ -540,6 +540,7 @@ var powerbi;
                         this.bar_height = 30;
                         this.horizontal_margin = 30;
                         this.realisation_text = "Réalisation";
+                        this.realisation_font_size = 61;
                         this.resteafaire_text = "Reste à faire";
                         this.ptpassage_text = "Point de passage";
                         this.ptpassage_color = "#9c27b0";
@@ -707,6 +708,9 @@ var powerbi;
                                             return (tmp).toLocaleString() + prctsuffix_1;
                                         }
                                     },
+                                    style: {
+                                        "fontSize": this.settings.dataDisplay.realisation_font_size + "px"
+                                    }
                                 },
                                 {
                                     id: "percent_value",
@@ -869,8 +873,8 @@ var powerbi;
     (function (visuals) {
         var plugins;
         (function (plugins) {
-            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG = {
-                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG',
+            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = {
+                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5',
                 displayName: 'flatprogress',
                 class: 'Visual',
                 version: '1.0.0',
