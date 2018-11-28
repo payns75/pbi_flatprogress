@@ -70,10 +70,10 @@ module powerbi.extensibility.visual {
     public resteafaire_color: string = "#424242";
     public resteafaire_decimal: number = 0;
 
-    public resteafaire_libelle_size: number = 16; //
-    public resteafaire_libelle_bold: boolean = true; //
+    public resteafaire_libelle_size: number = 16;
+    public resteafaire_libelle_bold: boolean = false;
     
-    public resteafaire_value_size: number = 36; //
-    public resteafaire_value_bold: boolean = false; //
+    public resteafaire_value_size: number = 36;
+    public resteafaire_value_bold: boolean = false;
   }
 }

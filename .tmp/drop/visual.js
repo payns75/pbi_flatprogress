@@ -610,10 +610,10 @@ var powerbi;
                         this.resteafaire_text = "Reste à faire";
                         this.resteafaire_color = "#424242";
                         this.resteafaire_decimal = 0;
-                        this.resteafaire_libelle_size = 16; //
-                        this.resteafaire_libelle_bold = true; //
-                        this.resteafaire_value_size = 36; //
-                        this.resteafaire_value_bold = false; //
+                        this.resteafaire_libelle_size = 16;
+                        this.resteafaire_libelle_bold = false;
+                        this.resteafaire_value_size = 36;
+                        this.resteafaire_value_bold = false;
                     }
                     return TodoSettings;
                 }());
@@ -710,7 +710,7 @@ var powerbi;
                             this.visual_top = document.createElement("div");
                             this.visual_top.className = "visual_top";
                             options.element.appendChild(this.visual_top);
-                            var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\" id=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\" id=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\">t</text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                    <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                </div>\n            ";
+                            var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\" id=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\"></div>\n                            <div id=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\" id=\"right_container\">\n                        <div id=\"reste_value\"></div>\n                        <div id=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\">t</text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div id=\"ptpassage_value\"></div>\n                    <div id=\"ptpassage_legend\"></div>\n                </div>\n            ";
                             this.visual_top.innerHTML = infos_container_html;
                             this.engine = new pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.DomEngine(this.visual_top);
                         }

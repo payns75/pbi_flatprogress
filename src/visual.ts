@@ -16,14 +16,14 @@ module powerbi.extensibility.visual {
                 <div class="container">
                     <div class="left_container" id="left_container">
                         <div class="current_value_container">
-                            <div id="current_value_libelle" class="current_value_libelle"></div>
-                            <div id="current_value" class="current_value"></div>
+                            <div id="current_value_libelle"></div>
+                            <div id="current_value"></div>
                         </div>
                         <div id="percent_value" class="percent_value"></div>
                     </div>
                     <div class="right_container" id="right_container">
-                        <div id="reste_value" class="reste_value"></div>
-                        <div id="reste_legend" class="reste_legend"></div>
+                        <div id="reste_value"></div>
+                        <div id="reste_legend"></div>
                     </div>
                 </div>
                 <svg id="svg">
@@ -36,8 +36,8 @@ module powerbi.extensibility.visual {
                     <line id="ptpassage_rectangle" y1="0" stroke-width="3" stroke-dasharray="5,5"></line>
                 </svg>
                 <div id="ptpassage_container" class="ptpassage_container">
-                    <div id="ptpassage_value" class="ptpassage_value"></div>
-                    <div id="ptpassage_legend" class="ptpassage_legend"></div>
+                    <div id="ptpassage_value"></div>
+                    <div id="ptpassage_legend"></div>
                 </div>
             `;
 
