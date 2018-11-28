@@ -54,7 +54,6 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
                 this.visual_top.setAttribute("style", `height:${options.viewport.height}px;margin: 0 ${this.settings.dataDisplay.horizontal_margin}px`);
                 const gwidth = this.visual_top.clientWidth;
-                // const svg_bottom_height = 36;
                 const _settings = this.settings;
 
                 const value = Visual.getvalue(options.dataViews[0].categorical, "measure");
@@ -113,7 +112,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     value: () => {
                         if (value) {
                             const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? value * 100 : +value;
-                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_decimal }) + prctsuffix;
+                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_decimal, maximumFractionDigits: _settings.realisation.realisation_decimal }) + prctsuffix;
                         }
                     },
                     style: {
@@ -127,7 +126,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     visible: !!prct_measure && !this.settings.dataOption.prctMode,
                     value: () => {
                         if (prct_measure) {
-                            return `${((+prct_measure)).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_prct_decimal })} %`;
+                            return `${((+prct_measure)).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_prct_decimal, maximumFractionDigits: _settings.realisation.realisation_prct_decimal })} %`;
                         }
                     },
                     style: {
@@ -161,7 +160,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     value: () => {
                         if (todo_measure || todo_measure === 0) {
                             const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? todo_measure * 100 : +todo_measure;
-                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings.todo.resteafaire_decimal }) + prctsuffix;
+                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings.todo.resteafaire_decimal,  maximumFractionDigits: _settings.todo.resteafaire_decimal }) + prctsuffix;
                         }
                     },
                     style: {
@@ -231,7 +230,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     svgtext: () => {
                         if (objectif_value) {
                             const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? objectif_value * 100 : objectif_value;
-                            return `${_settings.objectifs.objectif_text} ${tmp.toLocaleString(undefined, { minimumFractionDigits: _settings.objectifs.objectif_decimals })}${prctsuffix}`;
+                            return `${_settings.objectifs.objectif_text} ${tmp.toLocaleString(undefined, { minimumFractionDigits: _settings.objectifs.objectif_decimals, maximumFractionDigits: _settings.objectifs.objectif_decimals })}${prctsuffix}`;
                         }
                     },
                     style: {
@@ -256,7 +255,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     value: () => {
                         if (pt_passage_value) {
                             const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? pt_passage_value * 100 : +pt_passage_value;
-                            return tmp.toLocaleString(undefined, { minimumFractionDigits: _settings.ptPassage.ptpassage_decimal }) + prctsuffix;
+                            return tmp.toLocaleString(undefined, { minimumFractionDigits: _settings.ptPassage.ptpassage_decimal, maximumFractionDigits: _settings.ptPassage.ptpassage_decimal }) + prctsuffix;
                         }
                     },
                     style: {

@@ -724,7 +724,6 @@ var powerbi;
                             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
                             this.visual_top.setAttribute("style", "height:" + options.viewport.height + "px;margin: 0 " + this.settings.dataDisplay.horizontal_margin + "px");
                             var gwidth_1 = this.visual_top.clientWidth;
-                            // const svg_bottom_height = 36;
                             var _settings_1 = this.settings;
                             var value_1 = Visual.getvalue(options.dataViews[0].categorical, "measure");
                             var objectif_value_1 = Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
@@ -778,7 +777,7 @@ var powerbi;
                                     value: function () {
                                         if (value_1) {
                                             var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? value_1 * 100 : +value_1;
-                                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings_1.realisation.realisation_decimal }) + prctsuffix_1;
+                                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings_1.realisation.realisation_decimal, maximumFractionDigits: _settings_1.realisation.realisation_decimal }) + prctsuffix_1;
                                         }
                                     },
                                     style: {
@@ -792,7 +791,7 @@ var powerbi;
                                     visible: !!prct_measure_1 && !this.settings.dataOption.prctMode,
                                     value: function () {
                                         if (prct_measure_1) {
-                                            return ((+prct_measure_1)).toLocaleString(undefined, { minimumFractionDigits: _settings_1.realisation.realisation_prct_decimal }) + " %";
+                                            return ((+prct_measure_1)).toLocaleString(undefined, { minimumFractionDigits: _settings_1.realisation.realisation_prct_decimal, maximumFractionDigits: _settings_1.realisation.realisation_prct_decimal }) + " %";
                                         }
                                     },
                                     style: {
@@ -826,7 +825,7 @@ var powerbi;
                                     value: function () {
                                         if (todo_measure_1 || todo_measure_1 === 0) {
                                             var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? todo_measure_1 * 100 : +todo_measure_1;
-                                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings_1.todo.resteafaire_decimal }) + prctsuffix_1;
+                                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings_1.todo.resteafaire_decimal, maximumFractionDigits: _settings_1.todo.resteafaire_decimal }) + prctsuffix_1;
                                         }
                                     },
                                     style: {
@@ -896,7 +895,7 @@ var powerbi;
                                     svgtext: function () {
                                         if (objectif_value_1) {
                                             var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? objectif_value_1 * 100 : objectif_value_1;
-                                            return _settings_1.objectifs.objectif_text + " " + tmp.toLocaleString(undefined, { minimumFractionDigits: _settings_1.objectifs.objectif_decimals }) + prctsuffix_1;
+                                            return _settings_1.objectifs.objectif_text + " " + tmp.toLocaleString(undefined, { minimumFractionDigits: _settings_1.objectifs.objectif_decimals, maximumFractionDigits: _settings_1.objectifs.objectif_decimals }) + prctsuffix_1;
                                         }
                                     },
                                     style: {
@@ -921,7 +920,7 @@ var powerbi;
                                     value: function () {
                                         if (pt_passage_value_1) {
                                             var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? pt_passage_value_1 * 100 : +pt_passage_value_1;
-                                            return tmp.toLocaleString(undefined, { minimumFractionDigits: _settings_1.ptPassage.ptpassage_decimal }) + prctsuffix_1;
+                                            return tmp.toLocaleString(undefined, { minimumFractionDigits: _settings_1.ptPassage.ptpassage_decimal, maximumFractionDigits: _settings_1.ptPassage.ptpassage_decimal }) + prctsuffix_1;
                                         }
                                     },
                                     style: {
