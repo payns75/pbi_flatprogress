@@ -1,6 +1,6 @@
 module powerbi.extensibility.visual {
     "use strict";
-    
+
     export class DomEngine {
         private data: any = {};
 
@@ -32,7 +32,7 @@ module powerbi.extensibility.visual {
                 }
 
                 if (visible) {
-                    if (item["value"] !== undefined) {
+                    if (item["value"] !== undefined) {el.style.fontWeight
                         const value = this.getvalue(item, "value");
                         el.innerHTML = value ? String(value) : "";
                     }
@@ -54,6 +54,11 @@ module powerbi.extensibility.visual {
                             const v = this.getvalue(item["style"], style_name);
                             el.style[style_name] = v ? v : "";
                         }
+                    }
+
+                    if (item["svgtext"] !== undefined) {
+                        const v = typeof (item["svgtext"]) === "function" ? item["svgtext"]() : item["svgtext"];
+                        el.childNodes[0].nodeValue = v;
                     }
                 }
             });

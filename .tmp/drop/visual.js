@@ -528,6 +528,10 @@ var powerbi;
                         var _this = _super !== null && _super.apply(this, arguments) || this;
                         _this.dataDisplay = new dataDisplaySettings();
                         _this.dataOption = new dataOptionSettings();
+                        _this.realisation = new RealisationSettings();
+                        _this.objectifs = new ObjectifSettings();
+                        _this.todo = new TodoSettings();
+                        _this.ptPassage = new PtPassageSettings();
                         return _this;
                     }
                     return VisualSettings;
@@ -539,20 +543,12 @@ var powerbi;
                         this.fill = "#16B1E6";
                         this.bar_height = 30;
                         this.horizontal_margin = 30;
-                        this.realisation_text = "Réalisation";
-                        this.realisation_font_size = 61;
-                        this.resteafaire_text = "Reste à faire";
-                        this.ptpassage_text = "Point de passage";
-                        this.ptpassage_color = "#9c27b0";
-                        this.objectif_text = "Objectif:";
-                        this.objectif_color = "#1b5e20";
                     }
                     return dataDisplaySettings;
                 }());
                 pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.dataDisplaySettings = dataDisplaySettings;
                 var dataOptionSettings = (function () {
                     function dataOptionSettings() {
-                        this.ptPassage = true;
                         this.rstAFaire = true;
                         this.prctMode = false;
                         this.prctMultiPlicateur = false;
@@ -561,6 +557,67 @@ var powerbi;
                     return dataOptionSettings;
                 }());
                 pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.dataOptionSettings = dataOptionSettings;
+                var PtPassageSettings = (function () {
+                    function PtPassageSettings() {
+                        this.show = true;
+                        this.ptpassage_color = "#003C82";
+                        this.ptpassage_decimal = 0;
+                        this.fontFamily = "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif";
+                        this.ptpassage_text = "Point de passage";
+                        this.ptpassage_libelle_size = 16;
+                        this.ptpassage_libelle_bold = false;
+                        this.ptpassage_value_size = 36;
+                        this.ptpassage_value_bold = false;
+                    }
+                    return PtPassageSettings;
+                }());
+                pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.PtPassageSettings = PtPassageSettings;
+                var RealisationSettings = (function () {
+                    function RealisationSettings() {
+                        this.fontFamily = "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif";
+                        this.realisation_text = "Réalisation";
+                        this.realisation_libelle_size = 16;
+                        this.realisation_libelle_bold = false;
+                        this.realisation_libelle_color = "#003C82";
+                        this.realisation_decimal = 0;
+                        this.realisation_font_size = 61;
+                        this.realisation_color = "#000";
+                        this.realisation_bold = false;
+                        this.realisation_prct_decimal = 0;
+                        this.realisation_prct_font_size = 25;
+                        this.realisation_prct_color = "#000";
+                        this.realisation_prct_bold = false;
+                    }
+                    return RealisationSettings;
+                }());
+                pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.RealisationSettings = RealisationSettings;
+                var ObjectifSettings = (function () {
+                    function ObjectifSettings() {
+                        this.fontFamily = "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif";
+                        this.objectif_decimals = 0;
+                        this.objectif_text = "Objectif:";
+                        this.objectif_color = "#1b5e20";
+                        this.objectif_bold = false;
+                        this.objectif_font_size = 16;
+                        this.objectif_bottom_size = 36;
+                    }
+                    return ObjectifSettings;
+                }());
+                pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.ObjectifSettings = ObjectifSettings;
+                var TodoSettings = (function () {
+                    function TodoSettings() {
+                        this.fontFamily = "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif";
+                        this.resteafaire_text = "Reste à faire";
+                        this.resteafaire_color = "#424242";
+                        this.resteafaire_decimal = 0;
+                        this.resteafaire_libelle_size = 16; //
+                        this.resteafaire_libelle_bold = true; //
+                        this.resteafaire_value_size = 36; //
+                        this.resteafaire_value_bold = false; //
+                    }
+                    return TodoSettings;
+                }());
+                pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.TodoSettings = TodoSettings;
             })(pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 || (visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = {}));
         })(visual = extensibility.visual || (extensibility.visual = {}));
     })(extensibility = powerbi.extensibility || (powerbi.extensibility = {}));
@@ -603,6 +660,7 @@ var powerbi;
                             }
                             if (visible) {
                                 if (item["value"] !== undefined) {
+                                    el.style.fontWeight;
                                     var value = _this.getvalue(item, "value");
                                     el.innerHTML = value ? String(value) : "";
                                 }
@@ -622,6 +680,10 @@ var powerbi;
                                         var v = _this.getvalue(item["style"], style_name);
                                         el.style[style_name] = v ? v : "";
                                     }
+                                }
+                                if (item["svgtext"] !== undefined) {
+                                    var v = typeof (item["svgtext"]) === "function" ? item["svgtext"]() : item["svgtext"];
+                                    el.childNodes[0].nodeValue = v;
                                 }
                             }
                         });
@@ -648,7 +710,7 @@ var powerbi;
                             this.visual_top = document.createElement("div");
                             this.visual_top.className = "visual_top";
                             options.element.appendChild(this.visual_top);
-                            var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\"></text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                    <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                </div>\n            ";
+                            var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\" id=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\" class=\"current_value_libelle\"></div>\n                            <div id=\"current_value\" class=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\" id=\"right_container\">\n                        <div id=\"reste_value\" class=\"reste_value\"></div>\n                        <div id=\"reste_legend\" class=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\">t</text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div id=\"ptpassage_value\" class=\"ptpassage_value\"></div>\n                    <div id=\"ptpassage_legend\" class=\"ptpassage_legend\"></div>\n                </div>\n            ";
                             this.visual_top.innerHTML = infos_container_html;
                             this.engine = new pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.DomEngine(this.visual_top);
                         }
@@ -657,12 +719,12 @@ var powerbi;
                         }
                     }
                     Visual.prototype.update = function (options) {
-                        // TEST : objectif_value != 0
+                        var _this = this;
                         try {
                             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
                             this.visual_top.setAttribute("style", "height:" + options.viewport.height + "px;margin: 0 " + this.settings.dataDisplay.horizontal_margin + "px");
                             var gwidth_1 = this.visual_top.clientWidth;
-                            var svg_bottom_height = 36;
+                            // const svg_bottom_height = 36;
                             var _settings_1 = this.settings;
                             var value_1 = Visual.getvalue(options.dataViews[0].categorical, "measure");
                             var objectif_value_1 = Visual.getvalue(options.dataViews[0].categorical, "objectif_measure");
@@ -693,11 +755,22 @@ var powerbi;
                                 objectif_position_1 = front_total_width;
                             }
                             var ptpassage_position_1 = pt_passage_value_1 / objectif_value_1 * objectif_position_1;
-                            var prctsuffix_1 = this.settings.dataOption.prctMode ? '%' : '';
+                            var prctsuffix_1 = this.settings.dataOption.prctMode ? ' %' : '';
                             var vm = [{
+                                    id: "left_container",
+                                    style: {
+                                        fontFamily: this.settings.realisation.fontFamily
+                                    }
+                                },
+                                {
                                     id: "current_value_libelle",
-                                    visible: !!this.settings.dataDisplay.realisation_text && !!value_1,
-                                    value: this.settings.dataDisplay.realisation_text
+                                    visible: !!this.settings.realisation.realisation_text && !!value_1,
+                                    value: this.settings.realisation.realisation_text,
+                                    style: {
+                                        color: this.settings.realisation.realisation_libelle_color,
+                                        fontSize: this.settings.realisation.realisation_libelle_size + "px",
+                                        fontWeight: this.settings.realisation.realisation_libelle_bold ? "bold" : "normal"
+                                    }
                                 },
                                 {
                                     id: "current_value",
@@ -705,11 +778,13 @@ var powerbi;
                                     value: function () {
                                         if (value_1) {
                                             var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? value_1 * 100 : +value_1;
-                                            return (tmp).toLocaleString() + prctsuffix_1;
+                                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings_1.realisation.realisation_decimal }) + prctsuffix_1;
                                         }
                                     },
                                     style: {
-                                        "fontSize": this.settings.dataDisplay.realisation_font_size + "px"
+                                        fontSize: this.settings.realisation.realisation_font_size + "px",
+                                        color: this.settings.realisation.realisation_color,
+                                        fontWeight: this.settings.realisation.realisation_bold ? "bold" : "normal"
                                     }
                                 },
                                 {
@@ -717,16 +792,32 @@ var powerbi;
                                     visible: !!prct_measure_1 && !this.settings.dataOption.prctMode,
                                     value: function () {
                                         if (prct_measure_1) {
-                                            return ((+prct_measure_1).toFixed(0)).toLocaleString() + "%";
+                                            return ((+prct_measure_1)).toLocaleString(undefined, { minimumFractionDigits: _settings_1.realisation.realisation_prct_decimal }) + " %";
                                         }
                                     },
+                                    style: {
+                                        color: this.settings.realisation.realisation_prct_color,
+                                        fontSize: this.settings.realisation.realisation_prct_font_size + "px",
+                                        fontWeight: this.settings.realisation.realisation_prct_bold ? "bold" : "normal"
+                                    }
+                                },
+                                {
+                                    id: "right_container",
+                                    style: {
+                                        fontFamily: this.settings.todo.fontFamily,
+                                        color: this.settings.todo.resteafaire_color
+                                    }
                                 },
                                 {
                                     id: "reste_legend",
-                                    visible: !!this.settings.dataDisplay.resteafaire_text
+                                    visible: !!this.settings.todo.resteafaire_text
                                         && (!!todo_measure_1 || todo_measure_1 === 0)
                                         && this.settings.dataOption.rstAFaire,
-                                    value: this.settings.dataDisplay.resteafaire_text
+                                    value: this.settings.todo.resteafaire_text,
+                                    style: {
+                                        fontSize: this.settings.todo.resteafaire_libelle_size + "px",
+                                        fontWeight: this.settings.todo.resteafaire_libelle_bold ? "bold" : "normal"
+                                    }
                                 },
                                 {
                                     id: "reste_value",
@@ -735,15 +826,19 @@ var powerbi;
                                     value: function () {
                                         if (todo_measure_1 || todo_measure_1 === 0) {
                                             var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? todo_measure_1 * 100 : +todo_measure_1;
-                                            return (tmp).toLocaleString() + prctsuffix_1;
+                                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings_1.todo.resteafaire_decimal }) + prctsuffix_1;
                                         }
                                     },
+                                    style: {
+                                        fontSize: this.settings.todo.resteafaire_value_size + "px",
+                                        fontWeight: this.settings.todo.resteafaire_value_bold ? "bold" : "normal"
+                                    }
                                 },
                                 {
                                     id: "svg",
                                     attr: {
                                         width: gwidth_1,
-                                        height: this.settings.dataDisplay.bar_height + svg_bottom_height
+                                        height: this.settings.dataDisplay.bar_height + _settings_1.objectifs.objectif_bottom_size
                                     }
                                 },
                                 {
@@ -776,7 +871,7 @@ var powerbi;
                                         x1: objectif_position_1,
                                         x2: objectif_position_1,
                                         y2: this.settings.dataDisplay.bar_height,
-                                        stroke: this.settings.dataDisplay.objectif_color
+                                        stroke: this.settings.objectifs.objectif_color
                                     }
                                 },
                                 {
@@ -786,60 +881,76 @@ var powerbi;
                                         transform: function () {
                                             return "translate(" + objectif_position_1 + "," + (_settings_1.dataDisplay.bar_height + 2) + ")";
                                         },
-                                        fill: this.settings.dataDisplay.objectif_color
+                                        fill: this.settings.objectifs.objectif_color
                                     }
                                 },
                                 {
                                     id: "objectif_text",
                                     visible: !!objectif_value_1,
-                                    value: function () {
-                                        if (objectif_value_1) {
-                                            var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? objectif_value_1 * 100 : objectif_value_1;
-                                            return _settings_1.dataDisplay.objectif_text + " " + tmp.toLocaleString() + prctsuffix_1;
-                                        }
-                                    },
                                     attr: {
                                         "text-anchor": objectif_position_1 < 100 ? "right" : "middle",
-                                        fill: this.settings.dataDisplay.objectif_color,
+                                        fill: this.settings.objectifs.objectif_color,
                                         x: objectif_position_1,
-                                        y: this.settings.dataDisplay.bar_height + svg_bottom_height - 4
+                                        y: this.settings.dataDisplay.bar_height + _settings_1.objectifs.objectif_bottom_size - 4
+                                    },
+                                    svgtext: function () {
+                                        if (objectif_value_1) {
+                                            var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? objectif_value_1 * 100 : objectif_value_1;
+                                            return _settings_1.objectifs.objectif_text + " " + tmp.toLocaleString(undefined, { minimumFractionDigits: _settings_1.objectifs.objectif_decimals }) + prctsuffix_1;
+                                        }
+                                    },
+                                    style: {
+                                        fontSize: this.settings.objectifs.objectif_font_size + "px",
+                                        fontWeight: this.settings.objectifs.objectif_bold ? "500" : "100",
+                                        fontFamily: this.settings.objectifs.fontFamily,
                                     }
                                 },
                                 {
                                     id: "ptpassage_rectangle",
-                                    visible: this.settings.dataOption.ptPassage && pt_passage_value_1,
+                                    visible: this.settings.ptPassage.show && pt_passage_value_1,
                                     attr: {
-                                        y2: this.settings.dataDisplay.bar_height + svg_bottom_height,
+                                        y2: this.settings.dataDisplay.bar_height + _settings_1.objectifs.objectif_bottom_size,
                                         x1: ptpassage_position_1,
                                         x2: ptpassage_position_1,
-                                        stroke: this.settings.dataDisplay.ptpassage_color
+                                        stroke: this.settings.ptPassage.ptpassage_color
                                     }
                                 },
                                 {
                                     id: "ptpassage_value",
-                                    visible: this.settings.dataOption.ptPassage && pt_passage_value_1,
+                                    visible: this.settings.ptPassage.show && pt_passage_value_1,
                                     value: function () {
                                         if (pt_passage_value_1) {
                                             var tmp = _settings_1.dataOption.prctMode && _settings_1.dataOption.prctMultiPlicateur ? pt_passage_value_1 * 100 : +pt_passage_value_1;
-                                            return tmp.toLocaleString() + prctsuffix_1;
+                                            return tmp.toLocaleString(undefined, { minimumFractionDigits: _settings_1.ptPassage.ptpassage_decimal }) + prctsuffix_1;
                                         }
+                                    },
+                                    style: {
+                                        fontSize: this.settings.ptPassage.ptpassage_value_size + "px",
+                                        fontWeight: this.settings.ptPassage.ptpassage_value_bold ? "bold" : "normal"
                                     }
                                 },
                                 {
                                     id: "ptpassage_legend",
-                                    visible: this.settings.dataOption.ptPassage && pt_passage_value_1,
-                                    value: this.settings.dataDisplay.ptpassage_text
+                                    value: this.settings.ptPassage.ptpassage_text,
+                                    style: {
+                                        fontSize: this.settings.ptPassage.ptpassage_libelle_size + "px",
+                                        fontWeight: this.settings.ptPassage.ptpassage_libelle_bold ? "bold" : "normal"
+                                    }
                                 },
                                 {
                                     id: "ptpassage_container",
                                     style: {
-                                        color: this.settings.dataDisplay.ptpassage_color,
+                                        display: function () {
+                                            return _this.settings.ptPassage.show && pt_passage_value_1 ? "block" : "none";
+                                        },
+                                        color: this.settings.ptPassage.ptpassage_color,
                                         "margin-left": function () {
                                             var ptpassage_container_position = ptpassage_position_1 - 150 / 2;
                                             ptpassage_container_position = ptpassage_container_position < 0 ? 0 : ptpassage_container_position;
                                             ptpassage_container_position = ptpassage_container_position > gwidth_1 - 150 / 2 ? gwidth_1 - 150 : ptpassage_container_position;
                                             return ptpassage_container_position + "px";
-                                        }
+                                        },
+                                        fontFamily: this.settings.ptPassage.fontFamily,
                                     }
                                 }];
                             this.engine.update(vm);
