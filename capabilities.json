@@ -116,18 +116,6 @@
                     "type": {
                         "numeric": true
                     }
-                },
-                "realisation_font_size": {
-                    "displayName": "Réalisation Font Size",
-                    "type": {
-                        "numeric": true
-                    }
-                },
-                "realisation_text": {
-                    "displayName": "Réalisation Text",
-                    "type": {
-                        "text": true
-                    }
                 }
             }
         },
@@ -273,6 +261,12 @@
                         ]
                     }
                 },
+                "realisation_text_show": {
+                    "displayName": "Show Libelle",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "realisation_text": {
                     "displayName": "Libelle",
                     "type": {
@@ -325,6 +319,12 @@
                 },
                 "realisation_bold": {
                     "displayName": "Value Bold",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "realisation_prct_show": {
+                    "displayName": "Show Prct",
                     "type": {
                         "bool": true
                     }

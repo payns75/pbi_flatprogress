@@ -575,6 +575,7 @@ var powerbi;
                 var RealisationSettings = (function () {
                     function RealisationSettings() {
                         this.fontFamily = "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif";
+                        this.realisation_text_show = false;
                         this.realisation_text = "Réalisation";
                         this.realisation_libelle_size = 16;
                         this.realisation_libelle_bold = false;
@@ -583,6 +584,7 @@ var powerbi;
                         this.realisation_font_size = 61;
                         this.realisation_color = "#000";
                         this.realisation_bold = false;
+                        this.realisation_prct_show = false;
                         this.realisation_prct_decimal = 0;
                         this.realisation_prct_font_size = 25;
                         this.realisation_prct_color = "#000";
@@ -710,7 +712,7 @@ var powerbi;
                             this.visual_top = document.createElement("div");
                             this.visual_top.className = "visual_top";
                             options.element.appendChild(this.visual_top);
-                            var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\" id=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\"></div>\n                            <div id=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\" id=\"right_container\">\n                        <div id=\"reste_value\"></div>\n                        <div id=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\">t</text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div id=\"ptpassage_value\"></div>\n                    <div id=\"ptpassage_legend\"></div>\n                </div>\n            ";
+                            var infos_container_html = "\n                <div class=\"container\">\n                    <div class=\"left_container\" id=\"left_container\">\n                        <div class=\"current_value_container\">\n                            <div id=\"current_value_libelle\"></div>\n                            <div id=\"current_value\"></div>\n                        </div>\n                        <div id=\"percent_value\" class=\"percent_value\"></div>\n                    </div>\n                    <div class=\"right_container\" id=\"right_container\">\n                        <div id=\"reste_value\"></div>\n                        <div id=\"reste_legend\"></div>\n                    </div>\n                </div>\n                <svg id=\"svg\">\n                    <rect id=\"back_rectangle\"></rect>\n                    <rect id=\"front_rectangle\"></rect>\n                    <line id=\"objectif_rectangle\" width=\"3\" y1=\"0\" stroke-width=\"1\"></line>\n                    <text id=\"zero_text\" text-anchor=\"right\">0</text>\n                    <polygon id=\"objectif_triangle\" points=\"0 0,7 10,-7 10\"></polygon>\n                    <text id=\"objectif_text\">t</text>\n                    <line id=\"ptpassage_rectangle\" y1=\"0\" stroke-width=\"3\" stroke-dasharray=\"5,5\"></line>\n                </svg>\n                <div id=\"ptpassage_container\" class=\"ptpassage_container\">\n                    <div class=\"ptpassage_value_container\">\n                        <div id=\"ptpassage_value\"></div>\n                        <div id=\"ptpassage_prct\">(54%)</div>\n                    </div>\n                    <div id=\"ptpassage_legend\"></div>\n                </div>\n            ";
                             this.visual_top.innerHTML = infos_container_html;
                             this.engine = new pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.DomEngine(this.visual_top);
                         }
@@ -730,9 +732,13 @@ var powerbi;
                             var pt_passage_value_1 = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
                             var todo_measure_1 = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
                             var prct_measure_1 = +Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+                            var prct_passage_measure_1 = +Visual.getvalue(options.dataViews[0].categorical, "prct_passage_measure");
                             if (this.settings.dataOption.calculAuto) {
                                 if (objectif_value_1) {
                                     prct_measure_1 = value_1 / objectif_value_1 * 100;
+                                }
+                                if (pt_passage_value_1) {
+                                    prct_passage_measure_1 = value_1 / pt_passage_value_1 * 100;
                                 }
                                 var tmp = objectif_value_1 - value_1;
                                 todo_measure_1 = tmp < 0 ? 0 : tmp;
@@ -740,6 +746,7 @@ var powerbi;
                             else {
                                 if (prct_measure_1 && this.settings.dataOption.prctMultiPlicateur) {
                                     prct_measure_1 *= 100;
+                                    prct_passage_measure_1 *= 100;
                                 }
                             }
                             var front_total_width = gwidth_1 - gwidth_1 * 10 / 100;
@@ -768,7 +775,10 @@ var powerbi;
                                     style: {
                                         color: this.settings.realisation.realisation_libelle_color,
                                         fontSize: this.settings.realisation.realisation_libelle_size + "px",
-                                        fontWeight: this.settings.realisation.realisation_libelle_bold ? "bold" : "normal"
+                                        fontWeight: this.settings.realisation.realisation_libelle_bold ? "bold" : "normal",
+                                        display: function () {
+                                            return _this.settings.realisation.realisation_text_show ? "block" : "none";
+                                        },
                                     }
                                 },
                                 {
@@ -797,7 +807,10 @@ var powerbi;
                                     style: {
                                         color: this.settings.realisation.realisation_prct_color,
                                         fontSize: this.settings.realisation.realisation_prct_font_size + "px",
-                                        fontWeight: this.settings.realisation.realisation_prct_bold ? "bold" : "normal"
+                                        fontWeight: this.settings.realisation.realisation_prct_bold ? "bold" : "normal",
+                                        display: function () {
+                                            return _this.settings.realisation.realisation_prct_show ? "block" : "none";
+                                        }
                                     }
                                 },
                                 {
@@ -929,6 +942,16 @@ var powerbi;
                                     }
                                 },
                                 {
+                                    id: "ptpassage_prct",
+                                    visible: !!prct_passage_measure_1,
+                                    value: function () {
+                                        if (prct_measure_1) {
+                                            // return prct_passage_measure;
+                                            return ((+prct_passage_measure_1)).toLocaleString(undefined, { minimumFractionDigits: _settings_1.realisation.realisation_prct_decimal, maximumFractionDigits: _settings_1.realisation.realisation_prct_decimal }) + "% / point de passage";
+                                        }
+                                    },
+                                },
+                                {
                                     id: "ptpassage_legend",
                                     value: this.settings.ptPassage.ptpassage_text,
                                     style: {
@@ -968,7 +991,22 @@ var powerbi;
                         }
                     };
                     Visual.prototype.enumerateObjectInstances = function (options) {
-                        return pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.VisualSettings.enumerateObjectInstances(this.settings || pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.VisualSettings.getDefault(), options);
+                        var values = pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.VisualSettings.enumerateObjectInstances(this.settings || pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5.VisualSettings.getDefault(), options);
+                        if (values.instances[0].objectName === 'realisation') {
+                            if (values.instances[0].properties.realisation_text_show === false) {
+                                delete values.instances[0].properties.realisation_text;
+                                delete values.instances[0].properties.realisation_libelle_size;
+                                delete values.instances[0].properties.realisation_libelle_bold;
+                                delete values.instances[0].properties.realisation_libelle_color;
+                            }
+                            if (values.instances[0].properties.realisation_prct_show === false) {
+                                delete values.instances[0].properties.realisation_prct_decimal;
+                                delete values.instances[0].properties.realisation_prct_font_size;
+                                delete values.instances[0].properties.realisation_prct_color;
+                                delete values.instances[0].properties.realisation_prct_bold;
+                            }
+                        }
+                        return values;
                     };
                     return Visual;
                 }());
@@ -983,8 +1021,8 @@ var powerbi;
     (function (visuals) {
         var plugins;
         (function (plugins) {
-            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5 = {
-                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5',
+            plugins.pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG = {
+                name: 'pbiflatprogress111DDC2C0F0D0384236A63C11C134C5CDB5_DEBUG',
                 displayName: 'flatprogress',
                 class: 'Visual',
                 version: '1.0.0',

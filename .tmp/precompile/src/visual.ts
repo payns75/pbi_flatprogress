@@ -36,7 +36,10 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     <line id="ptpassage_rectangle" y1="0" stroke-width="3" stroke-dasharray="5,5"></line>
                 </svg>
                 <div id="ptpassage_container" class="ptpassage_container">
-                    <div id="ptpassage_value"></div>
+                    <div class="ptpassage_value_container">
+                        <div id="ptpassage_value"></div>
+                        <div id="ptpassage_prct">(54%)</div>
+                    </div>
                     <div id="ptpassage_legend"></div>
                 </div>
             `;
@@ -61,10 +64,15 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 const pt_passage_value = +Visual.getvalue(options.dataViews[0].categorical, "pt_passage_measure");
                 let todo_measure = +Visual.getvalue(options.dataViews[0].categorical, "todo_measure");
                 let prct_measure = +Visual.getvalue(options.dataViews[0].categorical, "prct_measure");
+                let prct_passage_measure = +Visual.getvalue(options.dataViews[0].categorical, "prct_passage_measure");
 
                 if (this.settings.dataOption.calculAuto) {
                     if (objectif_value) {
                         prct_measure = value / objectif_value * 100;
+                    }
+
+                    if(pt_passage_value){
+                        prct_passage_measure = value / pt_passage_value * 100;
                     }
 
                     const tmp = objectif_value - value;
@@ -72,6 +80,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                 } else {
                     if (prct_measure && this.settings.dataOption.prctMultiPlicateur) {
                         prct_measure *= 100;
+                        prct_passage_measure *= 100;
                     }
                 }
 
@@ -103,7 +112,10 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     style: {
                         color: this.settings.realisation.realisation_libelle_color,
                         fontSize: this.settings.realisation.realisation_libelle_size + "px",
-                        fontWeight: this.settings.realisation.realisation_libelle_bold ? "bold" : "normal"
+                        fontWeight: this.settings.realisation.realisation_libelle_bold ? "bold" : "normal",
+                        display: () => {
+                            return this.settings.realisation.realisation_text_show ? "block" : "none";
+                        },
                     }
                 },
                 {
@@ -132,7 +144,10 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     style: {
                         color: this.settings.realisation.realisation_prct_color,
                         fontSize: this.settings.realisation.realisation_prct_font_size + "px",
-                        fontWeight: this.settings.realisation.realisation_prct_bold ? "bold" : "normal"
+                        fontWeight: this.settings.realisation.realisation_prct_bold ? "bold" : "normal",
+                        display: () => {
+                            return this.settings.realisation.realisation_prct_show ? "block" : "none";
+                        }
                     }
                 },
                 {
@@ -160,7 +175,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     value: () => {
                         if (todo_measure || todo_measure === 0) {
                             const tmp = _settings.dataOption.prctMode && _settings.dataOption.prctMultiPlicateur ? todo_measure * 100 : +todo_measure;
-                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings.todo.resteafaire_decimal,  maximumFractionDigits: _settings.todo.resteafaire_decimal }) + prctsuffix;
+                            return (tmp).toLocaleString(undefined, { minimumFractionDigits: _settings.todo.resteafaire_decimal, maximumFractionDigits: _settings.todo.resteafaire_decimal }) + prctsuffix;
                         }
                     },
                     style: {
@@ -264,6 +279,24 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     }
                 },
                 {
+                    id: "ptpassage_prct",
+                    visible: !!prct_passage_measure,
+                    value: () => {
+                        if (prct_measure) {
+                            // return prct_passage_measure;
+                            return `${((+prct_passage_measure)).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_prct_decimal, maximumFractionDigits: _settings.realisation.realisation_prct_decimal })}% / point de passage`;
+                        }
+                    },
+                    // style: {
+                    //     color: this.settings.realisation.realisation_prct_color,
+                    //     fontSize: this.settings.realisation.realisation_prct_font_size + "px",
+                    //     fontWeight: this.settings.realisation.realisation_prct_bold ? "bold" : "normal",
+                    //     display: () => {
+                    //         return this.settings.realisation.realisation_prct_show ? "block" : "none";
+                    //     }
+                    // }
+                },
+                {
                     id: "ptpassage_legend",
                     value: this.settings.ptPassage.ptpassage_text,
                     style: {
@@ -308,7 +341,25 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
         }
 
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
-            return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
+            const values = <any>VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
+
+            if (values.instances[0].objectName === 'realisation') {
+                if (values.instances[0].properties.realisation_text_show === false) {
+                    delete values.instances[0].properties.realisation_text;
+                    delete values.instances[0].properties.realisation_libelle_size;
+                    delete values.instances[0].properties.realisation_libelle_bold;
+                    delete values.instances[0].properties.realisation_libelle_color;
+                }
+
+                if (values.instances[0].properties.realisation_prct_show === false) {
+                    delete values.instances[0].properties.realisation_prct_decimal;
+                    delete values.instances[0].properties.realisation_prct_font_size;
+                    delete values.instances[0].properties.realisation_prct_color;
+                    delete values.instances[0].properties.realisation_prct_bold;
+                }
+            }
+
+            return values;
         }
     }
 }

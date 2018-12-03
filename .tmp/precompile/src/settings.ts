@@ -39,6 +39,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
 
   export class RealisationSettings {
     public fontFamily: string = "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif";
+    public realisation_text_show: boolean = false;
     public realisation_text: string = "Réalisation";
     public realisation_libelle_size: number = 16;
     public realisation_libelle_bold: boolean = false;
@@ -47,6 +48,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
     public realisation_font_size: number = 61;
     public realisation_color: string = "#000";
     public realisation_bold: boolean = false;
+    public realisation_prct_show: boolean = false;
     public realisation_prct_decimal: number = 0;
     public realisation_prct_font_size: number = 25;
     public realisation_prct_color: string = "#000";
