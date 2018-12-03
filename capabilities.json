@@ -24,6 +24,11 @@
             "displayName": "Point de Passage",
             "name": "pt_passage_measure",
             "kind": "Measure"
+        },
+        {
+            "displayName": "Pourcentage Passage",
+            "name": "prct_passage_measure",
+            "kind": "Measure"
         }
     ],
     "dataViewMappings": [
@@ -44,6 +49,9 @@
                         "max": 1
                     },
                     "pt_passage_measure": {
+                        "max": 1
+                    },
+                    "prct_passage_measure": {
                         "max": 1
                     }
                 }
@@ -74,6 +82,11 @@
                         {
                             "bind": {
                                 "to": "pt_passage_measure"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "prct_passage_measure"
                             }
                         }
                     ]

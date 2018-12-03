@@ -32,7 +32,7 @@ module powerbi.extensibility.visual {
                 }
 
                 if (visible) {
-                    if (item["value"] !== undefined) {el.style.fontWeight
+                    if (item["value"] !== undefined) {
                         const value = this.getvalue(item, "value");
                         el.innerHTML = value ? String(value) : "";
                     }

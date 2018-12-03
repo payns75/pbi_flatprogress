@@ -662,7 +662,6 @@ var powerbi;
                             }
                             if (visible) {
                                 if (item["value"] !== undefined) {
-                                    el.style.fontWeight;
                                     var value = _this.getvalue(item, "value");
                                     el.innerHTML = value ? String(value) : "";
                                 }
