@@ -833,6 +833,24 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "ptpassage_prct_visible": {
+                    "displayName": "Pourcentage ?",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "ptpassage_prct_text": {
+                    "displayName": "Prct font size",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "ptpassage_prct_font_size": {
+                    "displayName": "Prct font size",
+                    "type": {
+                        "numeric": true
+                    }
                 }
             }
         }

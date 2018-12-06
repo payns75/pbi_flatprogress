@@ -35,6 +35,9 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
     public ptpassage_libelle_bold: boolean = false;
     public ptpassage_value_size: number = 36;
     public ptpassage_value_bold: boolean = false;
+    public ptpassage_prct_visible: boolean = true;
+    public ptpassage_prct_text: string = "du point de passage";
+    public ptpassage_prct_font_size: number = 18;
   }
 
   export class RealisationSettings {

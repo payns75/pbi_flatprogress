@@ -36,11 +36,9 @@ module powerbi.extensibility.visual {
                     <line id="ptpassage_rectangle" y1="0" stroke-width="3" stroke-dasharray="5,5"></line>
                 </svg>
                 <div id="ptpassage_container" class="ptpassage_container">
-                    <div class="ptpassage_value_container">
-                        <div id="ptpassage_value"></div>
-                        <div id="ptpassage_prct">(54%)</div>
-                    </div>
+                    <div id="ptpassage_value"></div>
                     <div id="ptpassage_legend"></div>
+                    <div id="ptpassage_prct"></div>
                 </div>
             `;
 
@@ -283,18 +281,15 @@ module powerbi.extensibility.visual {
                     visible: !!prct_passage_measure,
                     value: () => {
                         if (prct_measure) {
-                            // return prct_passage_measure;
-                            return `${((+prct_passage_measure)).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_prct_decimal, maximumFractionDigits: _settings.realisation.realisation_prct_decimal })}% / point de passage`;
+                            return `<b>${((+prct_passage_measure)).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_prct_decimal, maximumFractionDigits: _settings.realisation.realisation_prct_decimal })}%</b> ${this.settings.ptPassage.ptpassage_prct_text}`;
                         }
                     },
-                    // style: {
-                    //     color: this.settings.realisation.realisation_prct_color,
-                    //     fontSize: this.settings.realisation.realisation_prct_font_size + "px",
-                    //     fontWeight: this.settings.realisation.realisation_prct_bold ? "bold" : "normal",
-                    //     display: () => {
-                    //         return this.settings.realisation.realisation_prct_show ? "block" : "none";
-                    //     }
-                    // }
+                    style: {
+                        fontSize: this.settings.ptPassage.ptpassage_prct_font_size + "px",
+                        display: () => {
+                            return this.settings.ptPassage.ptpassage_prct_visible ? "block" : "none";
+                        }
+                    }
                 },
                 {
                     id: "ptpassage_legend",
@@ -356,6 +351,13 @@ module powerbi.extensibility.visual {
                     delete values.instances[0].properties.realisation_prct_font_size;
                     delete values.instances[0].properties.realisation_prct_color;
                     delete values.instances[0].properties.realisation_prct_bold;
+                }
+            }
+
+            if (values.instances[0].objectName === 'ptPassage') {
+                if (values.instances[0].properties.ptpassage_prct_visible === false) {
+                    delete values.instances[0].properties.ptpassage_prct_text;
+                    delete values.instances[0].properties.ptpassage_prct_font_size;
                 }
             }
 
