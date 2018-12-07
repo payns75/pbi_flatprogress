@@ -280,7 +280,7 @@ module powerbi.extensibility.visual.pbiflatprogress111DDC2C0F0D0384236A63C11C134
                     id: "ptpassage_prct",
                     visible: !!prct_passage_measure || prct_passage_measure===0,
                     value: () => {
-                        if (prct_measure) {
+                        if (!!prct_passage_measure || prct_passage_measure===0) {
                             return `<b>${((+prct_passage_measure)).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_prct_decimal, maximumFractionDigits: _settings.realisation.realisation_prct_decimal })}%</b> ${this.settings.ptPassage.ptpassage_prct_text}`;
                         }
                     },
