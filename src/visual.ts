@@ -278,7 +278,7 @@ module powerbi.extensibility.visual {
                 },
                 {
                     id: "ptpassage_prct",
-                    visible: !!prct_passage_measure,
+                    visible: !!prct_passage_measure || prct_passage_measure===0,
                     value: () => {
                         if (prct_measure) {
                             return `<b>${((+prct_passage_measure)).toLocaleString(undefined, { minimumFractionDigits: _settings.realisation.realisation_prct_decimal, maximumFractionDigits: _settings.realisation.realisation_prct_decimal })}%</b> ${this.settings.ptPassage.ptpassage_prct_text}`;

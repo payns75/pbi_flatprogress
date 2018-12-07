@@ -945,7 +945,7 @@ var powerbi;
                                 },
                                 {
                                     id: "ptpassage_prct",
-                                    visible: !!prct_passage_measure_1,
+                                    visible: !!prct_passage_measure_1 || prct_passage_measure_1 === 0,
                                     value: function () {
                                         if (prct_measure_1) {
                                             return "<b>" + ((+prct_passage_measure_1)).toLocaleString(undefined, { minimumFractionDigits: _settings_1.realisation.realisation_prct_decimal, maximumFractionDigits: _settings_1.realisation.realisation_prct_decimal }) + "%</b> " + _this.settings.ptPassage.ptpassage_prct_text;
